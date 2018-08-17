@@ -37,11 +37,18 @@ object Optimizer {
         for (user in data.users) {
             for (application in user.applications) {
                 application.project.also { ref ->
-                    val projectName = projects[ref.id]?.name
-                    if (projectName == null) {
+                    val project = projects[ref.id]
+                    if (project == null) {
                         logger.warn {
-                            "user ${user.name} has an application for ${ref.id} " +
-                                    "that is not part of the projects list"
+                            "student ${user.name} is applying for a project with id \"${ref.id}\" " +
+                                    "which was not found in the projects list"
+                        }
+                    } else {
+                        if (project.roles.getMax(application.role) == 0) {
+                            logger.warn {
+                                "student ${user.name}, role ${application.role}, ${if (application.isMastermind)  "ProjectOwner" else "Priorität ${application.priority}"}, " +
+                                        "project \"${project.name}\": ${project.roles}"
+                            }
                         }
                     }
                 }
@@ -53,7 +60,7 @@ object Optimizer {
             }
         }
 
-        logger.info { "checked ${data.users.size} users for invalid project references" }
+        logger.info { "checked ${data.users.size} users for invalid applications" }
 
         projectStats(data, projects)
     }
