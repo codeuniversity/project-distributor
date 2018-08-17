@@ -1,7 +1,10 @@
 package org.codeberlin.projectdistributor.data
 
 data class Roles(
-        val maxSE: Int,
+        val minID: Int,
+        val maxID: Int,
+        val minPM: Int,
         val maxPM: Int,
-        val maxID: Int
+        val minSE: Int,
+        val maxSE: Int
 )
