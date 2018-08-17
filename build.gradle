@@ -32,3 +32,9 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+task printClasspath(dependsOn: 'classes') {
+    doLast {
+        println sourceSets.main.runtimeClasspath.join(File.pathSeparator)
+    }
+}
