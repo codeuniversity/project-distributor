@@ -1,7 +1,7 @@
 ## Project Data ##
 For privacy reasons the actual project applications are not stored in the repository. 
 
-Create a file called `project-applications` in the `src/main/resources` folder with 
+Create a file called `project-applications.json` in the `src/main/resources` folder with 
 the actual data to run the optimizer. 
 
 ## IDE Setup ##
