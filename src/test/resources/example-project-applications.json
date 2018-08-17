@@ -1,0 +1,78 @@
+{
+  "data": {
+    "projects": [
+      {
+        "duration": "FULL",
+        "name": "Example Project",
+        "stakeholder": {
+          "organization": ""
+        },
+        "id": "cjk8i7k72021b0a774t8wa7wy",
+        "roles": {
+          "maxSE": 2,
+          "maxPM": 1,
+          "maxID": 2
+        }
+      },
+      {
+        "duration": "HALF",
+        "name": "Example Half Project",
+        "stakeholder": {
+          "organization": "Some Stakeholder Org"
+        },
+        "id": "cjk8i7kge02l00a770y81cjuw",
+        "roles": {
+          "maxSE": 2,
+          "maxPM": 0,
+          "maxID": 1
+        }
+      }
+    ],
+    "users": [
+      {
+        "id": "cjk8l7tjf0fis0a77dq4uf9el",
+        "name": "Max Mustermann",
+        "applications": [
+          {
+            "isMastermind": false,
+            "priority": 5,
+            "project": {
+              "id": "cjk8i7kd602dm0a77l890b4be",
+              "name": "Example Project 1"
+            }
+          },
+          {
+            "isMastermind": false,
+            "priority": 3,
+            "project": {
+              "id": "cjk8i7kec02g90a77awfrifk7",
+              "name": "Example Project 2"
+            }
+          },
+          {
+            "isMastermind": false,
+            "priority": 2,
+            "project": {
+              "id": "cjk8i7kcy02d30a77yaj90p9u",
+              "name": "Example Project 3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "cjk8nbn5n0mug0a771u8ssmyd",
+        "name": "Minnie Mouse",
+        "applications": [
+          {
+            "isMastermind": true,
+            "priority": 10,
+            "project": {
+              "id": "cjk8i7k91024r0a77on52o31l",
+              "name": "Example Project 4"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
