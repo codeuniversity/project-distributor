@@ -31,7 +31,7 @@ class AssignmentScoreCalculator : IncrementalScoreCalculator<ProjectAssignment> 
 
     private fun add(student: Student, value: Int) {
         student.chosenApplication?.apply {
-            val column = if (priority == 10) project.attendance[3] else role.ordinal
+            val column = if (priority == 10) 3 else role.ordinal
             project.attendance[column] += value
         }
     }
