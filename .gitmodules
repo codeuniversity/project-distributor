@@ -1,0 +1,3 @@
+[submodule "project-distributor-data"]
+	path = project-distributor-data
+	url = git@bitbucket.org:xkcdF/project-distributor-data.git
