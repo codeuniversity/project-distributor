@@ -9,16 +9,18 @@ import org.codeberlin.projectdistributor.data.Role
 object Optimizer {
     private val logger = KotlinLogging.logger {}
 
+    fun loadMainData() = javaClass.getResourceAsStream("/project-applications.json")
+            ?.let { DataUtil.fromStream(it).data }
+
     @JvmStatic
     fun main(args: Array<String>) {
-        val jsonStream = javaClass.getResourceAsStream("/project-applications.json")
-        if (jsonStream == null) {
+        val data = loadMainData()
+        if (data == null) {
             logger.warn { "please put a file called project-applications.json into the src/main/resources folder" }
             return
         }
-        val data = DataUtil.fromStream(jsonStream).data
-        logger.debug { "data loaded: ${data.projects.size} projects and ${data.users.size} users" }
 
+        logger.debug { "data loaded: ${data.projects.size} projects and ${data.users.size} users" }
         checkDataConsistency(data)
     }
 
