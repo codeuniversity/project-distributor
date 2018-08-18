@@ -1,6 +1,7 @@
 package org.codeberlin.projectdistributor.model
 
 import org.codeberlin.projectdistributor.data.Data
+import org.codeberlin.projectdistributor.data.Duration
 import org.codeberlin.projectdistributor.data.Role
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty
 import org.optaplanner.core.api.domain.solution.PlanningScore
@@ -31,14 +32,18 @@ data class ProjectAssignment(
             }.toMap()
 
             val fallBackApplications = Role.values().map { role ->
-                role to projects.filter { it.roles.getMin(role) > 0 }.map { Application(role, -20, it) }
+                role to projects.filter { it.duration == Duration.FULL && it.roles.getMin(role) > 0 }.map { Application(role, -20, it) }
             }.toMap()
 
-            return ProjectAssignment(projects, data.users.filter { it.applications.find { it.isMastermind } != null }.map {
-                Student(it.id, it.name, it.applications.map {
+            val filteredUsers = data.users.filter { it.applications.find { it.isMastermind } == null }
+            val students = filteredUsers.map {
+                val allApps = it.applications.map {
                     Application(it.role, it.priority, projectById[it.project.id]!!)
-                }.plus(fallBackApplications[it.applications[0].role]!!))
-            })
+                }
+                val applications = allApps.filter { it.project.duration == Duration.FULL }
+                Student(it.id, it.name, applications.plus(fallBackApplications[it.applications[0].role]!!))
+            }
+            return ProjectAssignment(projects, students)
         }
     }
 }

@@ -13,10 +13,16 @@ data class Student(
 ) {
     constructor() : this("", "", emptyList())
 
-    @PlanningVariable(valueRangeProviderRefs = ["applicationRange"])
+    @PlanningVariable(valueRangeProviderRefs = ["applicationRange"], strengthComparatorClass = ApplicationStrengthComp::class)
     var chosenApplication: Application? = null
 
     override fun toString(): String {
         return name
+    }
+}
+
+class ApplicationStrengthComp : Comparator<Application> {
+    override fun compare(a: Application, b: Application): Int {
+        return -a.priority.compareTo(b.priority)
     }
 }
