@@ -16,7 +16,6 @@
 
 package org.codeberlin.projectdistributor
 
-import com.google.gson.GsonBuilder
 import mu.KotlinLogging
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import org.codeberlin.projectdistributor.model.Student
@@ -36,38 +35,39 @@ object ExecuteOptimizer {
     fun main(args: Array<String>) {
         // Build the Solver
         val solver = SolverFactory.createFromXmlResource<ProjectAssignment>(
-                "solverConfig.xml")
-                .buildSolver()
+                "solverConfig.xml").buildSolver()
 
-        // Load the data
-        val data = Optimizer.loadMainData()
+        // Load the data, can be from a previous calculation
+        val unsolved =
+                if (args.isEmpty()) ProjectAssignment.convert(Optimizer.loadMainData())
+                else AssignmentPersistence().read(File(args[0]))
 
         val fmt = DateTimeFormatter.ofPattern("uuuu-MM-dd_HHmmss")
         val tstamp = fmt.format(LocalDateTime.now())
-
-        val unsolved = ProjectAssignment.convert(data)
-        unsolved.debugContent()
-
-        val name = "$tstamp-unsolved"
-        val gson = GsonBuilder().setPrettyPrinting().create()
-        File("local/data/results/$tstamp-unsolved.json").bufferedWriter().use { gson.toJson(unsolved, it) }
-
+        unsolved.export("$tstamp-unsolved")
 
         // Solve the problem
         val solved = solver.solve(unsolved)
-        solved.debugContent()
-        File("local/data/$tstamp-solved-${fmt.format(LocalDateTime.now())}.json").bufferedWriter().use { gson.toJson(solved, it) }
+        solved.export("$tstamp-solved-${fmt.format(LocalDateTime.now())}-${solved.score?.hardScore}-${solved.score?.softScore}")
+
+        // if any hard constrainst are mismatched, print them:
+        AssignmentScoreCalculator.debugScore(solved)
 
         // Display the result
         logger.info {
             val (winners, losers) = solved.students.partition { it.chosenApplication!!.priority > 0 }
+            val (running, cancelled) = solved.projects.partition { it.attendance.sum() > 0 }
             "Solved assignment with score ${solved.score}.\n" +
                     "Students winning applications: ${winners.size}\n\t" +
                     "${winners.print()}\n" +
                     "Students losing applications: ${losers.size}\n\t" +
-                    "${losers.print()}\n"
+                    "${losers.print()}\n\n" +
+                    "Projects with students: ${running.size}\n$running\n" +
+                    "Projects without students: ${cancelled.size}\n$cancelled\n"
         }
+    }
 
-        AssignmentScoreCalculator.debugScore(solved)
+    private fun ProjectAssignment.export(name: String) {
+        AssignmentPersistence().write(this, File(File("local/data/results").apply { mkdirs() }, "$name.json"))
     }
 }

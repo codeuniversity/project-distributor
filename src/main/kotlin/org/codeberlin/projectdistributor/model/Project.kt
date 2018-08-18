@@ -4,16 +4,16 @@ import org.codeberlin.projectdistributor.data.Duration
 import org.codeberlin.projectdistributor.data.Roles
 
 data class Project(
-        val duration: Duration,
-        val name: String,
+        val duration: Duration?,
+        val name: String?,
         val id: String,
-        val roles: Roles
+        val roles: Roles?
 ) {
     // for keeping track of enrolled students during modelling
     // ID, PM, SE, owner
     @Transient val attendance: IntArray = intArrayOf(0, 0, 0, 0)
 
     override fun toString(): String {
-        return if (duration == Duration.HALF) "HALF $name" else name
+        return if (duration == Duration.HALF) "HALF $name" else name ?: id
     }
 }

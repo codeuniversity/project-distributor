@@ -7,7 +7,7 @@ import org.codeberlin.projectdistributor.data.Role
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty
 import org.optaplanner.core.api.domain.solution.PlanningScore
 import org.optaplanner.core.api.domain.solution.PlanningSolution
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
 
 @PlanningSolution
 data class ProjectAssignment(
@@ -18,7 +18,7 @@ data class ProjectAssignment(
     constructor() : this(emptyList(), emptyList())
 
     @PlanningScore
-    @Transient var score: HardSoftScore? = null
+    @Transient var score: HardMediumSoftScore? = null
 
     fun debugContent() {
         logger.debug {
@@ -49,7 +49,7 @@ data class ProjectAssignment(
             }.toMap()
 
             val fallBackApplications = Role.values().map { role ->
-                role to projects.filter { it.roles.getMin(role) > 0 }.map { Application(role, -20, it) }
+                role to projects.filter { it.roles?.getMin(role) ?: 0 > 0 }.map { Application(role, -20, it) }
             }.toMap()
 
             val students = data.users.map { user ->

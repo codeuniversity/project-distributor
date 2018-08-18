@@ -8,14 +8,14 @@
         <!--<initializingScoreTrend>ONLY_DOWN/ONLY_DOWN</initializingScoreTrend>-->
     </scoreDirectorFactory>
     <termination>
-        <minutesSpentLimit>30</minutesSpentLimit>
+        <minutesSpentLimit>90</minutesSpentLimit>
     </termination>
     <constructionHeuristic>
-        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+        <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
     </constructionHeuristic>
     <localSearch>
         <acceptor>
-            <simulatedAnnealingStartingTemperature>100hard/500soft</simulatedAnnealingStartingTemperature>
+            <simulatedAnnealingStartingTemperature>0hard/0medium/40soft</simulatedAnnealingStartingTemperature>
         </acceptor>
         <forager>
             <acceptedCountLimit>4</acceptedCountLimit>

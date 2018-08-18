@@ -4,7 +4,7 @@ import mu.KLogging
 import org.codeberlin.projectdistributor.data.Role
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import org.codeberlin.projectdistributor.model.Student
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
 import org.optaplanner.core.impl.score.director.incremental.IncrementalScoreCalculator
 
 class AssignmentScoreCalculator : IncrementalScoreCalculator<ProjectAssignment> {
@@ -36,30 +36,31 @@ class AssignmentScoreCalculator : IncrementalScoreCalculator<ProjectAssignment> 
         }
     }
 
-    override fun calculateScore(): HardSoftScore {
-        val solution = workingSolution ?: return HardSoftScore.valueOf(0, 0)
+    override fun calculateScore(): HardMediumSoftScore {
+        val solution = workingSolution ?: return HardMediumSoftScore.valueOf(0, 0, 0)
 
         // softScore is the sum of student priorities
         val softScore = solution.students.sumBy { it.chosenApplication?.priority ?: 0 }
 
+        var mediumScore = 0
         var hardScore = 0
         for (project in solution.projects) {
             val totalAttendance = project.attendance.sum()
             Role.values().forEachIndexed { i, role ->
                 val attendance = project.attendance[i]
-                val min = project.roles.getMin(role)
+                val min = project.roles!!.getMin(role)
                 val max = project.roles.getMax(role)
                 if (attendance > max) {
                     // hard constraint: too many students
                     hardScore -= attendance - max
                 } else if (totalAttendance > 0 && attendance < min) {
-                    // hard constraint: too few students
-                    hardScore -= min - attendance
+                    // medium constraint: too few students
+                    mediumScore -= min - attendance
                 }
             }
         }
 
-        return HardSoftScore.valueOf(hardScore, softScore)
+        return HardMediumSoftScore.valueOf(hardScore, mediumScore, softScore)
     }
 
     companion object : KLogging() {
@@ -72,7 +73,7 @@ class AssignmentScoreCalculator : IncrementalScoreCalculator<ProjectAssignment> 
                 val totalAttendance = project.attendance.sum()
                 Role.values().forEachIndexed { i, role ->
                     val attendance = project.attendance[i]
-                    val max = project.roles.getMax(role)
+                    val max = project.roles!!.getMax(role)
                     val min = project.roles.getMin(role)
                     if (attendance > max) {
                         // hard constraint: too many students
