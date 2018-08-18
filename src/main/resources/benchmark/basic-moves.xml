@@ -17,7 +17,7 @@
 				<incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.AssignmentScoreCalculator</incrementalScoreCalculatorClass>
 			</scoreDirectorFactory>
 			<termination>
-				<secondsSpentLimit>120</secondsSpentLimit>
+				<secondsSpentLimit>600</secondsSpentLimit>
 			</termination>
 		</solver>
 	</inheritedSolverBenchmark>
@@ -34,24 +34,6 @@
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>40000</acceptedCountLimit>
-				</forager>
-			</localSearch>
-		</solver>
-	</solverBenchmark>
-
-	<solverBenchmark>
-		<name>Tabu Search Podium</name>
-		<solver>
-			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-			</constructionHeuristic>
-			<localSearch>
-				<acceptor>
-					<entityTabuSize>7</entityTabuSize>
-				</acceptor>
-				<forager>
-					<acceptedCountLimit>40000</acceptedCountLimit>
-					<finalistPodiumType>STRATEGIC_OSCILLATION</finalistPodiumType>
 				</forager>
 			</localSearch>
 		</solver>
@@ -86,23 +68,6 @@
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>40000</acceptedCountLimit>
-				</forager>
-			</localSearch>
-		</solver>
-	</solverBenchmark>
-
-	<solverBenchmark>
-		<name>SimAnn 0-4</name>
-		<solver>
-			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-			</constructionHeuristic>
-			<localSearch>
-				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/0medium/4soft</simulatedAnnealingStartingTemperature>
-				</acceptor>
-				<forager>
-					<acceptedCountLimit>4</acceptedCountLimit>
 				</forager>
 			</localSearch>
 		</solver>
@@ -194,23 +159,6 @@
 	</solverBenchmark>
 
 	<solverBenchmark>
-		<name>SimAnn 100-500</name>
-		<solver>
-			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-			</constructionHeuristic>
-			<localSearch>
-				<acceptor>
-					<simulatedAnnealingStartingTemperature>100hard/0medium/500soft</simulatedAnnealingStartingTemperature>
-				</acceptor>
-				<forager>
-					<acceptedCountLimit>4</acceptedCountLimit>
-				</forager>
-			</localSearch>
-		</solver>
-	</solverBenchmark>
-
-	<solverBenchmark>
 		<name>SimAnn 0-4000</name>
 		<solver>
 			<constructionHeuristic>
@@ -239,23 +187,6 @@
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
-				</forager>
-			</localSearch>
-		</solver>
-	</solverBenchmark>
-
-	<solverBenchmark>
-		<name>Late Acceptance</name>
-		<solver>
-			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-			</constructionHeuristic>
-			<localSearch>
-				<acceptor>
-					<lateAcceptanceSize>400</lateAcceptanceSize>
-				</acceptor>
-				<forager>
-					<acceptedCountLimit>1</acceptedCountLimit>
 				</forager>
 			</localSearch>
 		</solver>

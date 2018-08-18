@@ -17,9 +17,9 @@
 package org.codeberlin.projectdistributor
 
 import mu.KotlinLogging
+import org.codeberlin.projectdistributor.Analyser.analyseSolution
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import org.codeberlin.projectdistributor.model.Student
-import org.codeberlin.projectdistributor.score.AssignmentScoreCalculator
 import org.optaplanner.core.api.solver.SolverFactory
 import java.io.File
 import java.time.LocalDateTime
@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter
 object ExecuteOptimizer {
     private val logger = KotlinLogging.logger {}
 
-    private fun List<Student>.print() = sortedBy { it.name }
+    fun List<Student>.print() = sortedBy { it.name }
             .joinToString("\n\t") { "%-30s %s".format(it.name, it.chosenApplication) }
 
     @JvmStatic
@@ -50,21 +50,7 @@ object ExecuteOptimizer {
         val solved = solver.solve(unsolved)
         solved.export("$tstamp-solved-${fmt.format(LocalDateTime.now())}-${solved.score?.hardScore}-${solved.score?.softScore}")
 
-        // if any hard constrainst are mismatched, print them:
-        AssignmentScoreCalculator.debugScore(solved)
-
-        // Display the result
-        logger.info {
-            val (winners, losers) = solved.students.partition { it.chosenApplication!!.priority > 0 }
-            val (running, cancelled) = solved.projects.partition { it.attendance.sum() > 0 }
-            "Solved assignment with score ${solved.score}.\n" +
-                    "Students winning applications: ${winners.size}\n\t" +
-                    "${winners.print()}\n" +
-                    "Students losing applications: ${losers.size}\n\t" +
-                    "${losers.print()}\n\n" +
-                    "Projects with students: ${running.size}\n$running\n" +
-                    "Projects without students: ${cancelled.size}\n$cancelled\n"
-        }
+        analyseSolution(solved)
     }
 
     private fun ProjectAssignment.export(name: String) {
