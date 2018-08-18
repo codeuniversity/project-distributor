@@ -1,10 +1,11 @@
 package org.codeberlin.projectdistributor.model
 
 import org.codeberlin.projectdistributor.data.Data
+import org.codeberlin.projectdistributor.data.Role
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty
 import org.optaplanner.core.api.domain.solution.PlanningScore
 import org.optaplanner.core.api.domain.solution.PlanningSolution
-import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore
 
 @PlanningSolution
 data class ProjectAssignment(
@@ -15,7 +16,7 @@ data class ProjectAssignment(
     constructor() : this(emptyList(), emptyList())
 
     @PlanningScore
-    var score: HardMediumSoftScore? = null
+    var score: HardSoftScore? = null
 
 
     companion object {
@@ -29,10 +30,14 @@ data class ProjectAssignment(
                 it.id to it
             }.toMap()
 
-            return ProjectAssignment(projects, data.users.map {
+            val fallBackApplications = Role.values().map { role ->
+                role to projects.filter { it.roles.getMin(role) > 0 }.map { Application(role, -20, it) }
+            }.toMap()
+
+            return ProjectAssignment(projects, data.users.filter { it.applications.find { it.isMastermind } != null }.map {
                 Student(it.id, it.name, it.applications.map {
                     Application(it.role, it.priority, projectById[it.project.id]!!)
-                })
+                }.plus(fallBackApplications[it.applications[0].role]!!))
             })
         }
     }

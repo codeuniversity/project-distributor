@@ -13,6 +13,10 @@ data class Student(
 ) {
     constructor() : this("", "", emptyList())
 
-    @PlanningVariable(valueRangeProviderRefs = ["applicationRange"], nullable = true)
+    @PlanningVariable(valueRangeProviderRefs = ["applicationRange"])
     var chosenApplication: Application? = null
+
+    override fun toString(): String {
+        return name
+    }
 }

@@ -4,7 +4,7 @@ import mu.KLogging
 import org.codeberlin.projectdistributor.data.Role
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import org.codeberlin.projectdistributor.model.Student
-import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore
 import org.optaplanner.core.impl.score.director.incremental.IncrementalScoreCalculator
 
 class AssignmentScoreCalculator : IncrementalScoreCalculator<ProjectAssignment> {
@@ -36,38 +36,53 @@ class AssignmentScoreCalculator : IncrementalScoreCalculator<ProjectAssignment> 
         }
     }
 
-    override fun calculateScore(): HardMediumSoftScore {
-        val solution = workingSolution ?: return HardMediumSoftScore.valueOf(0, 0,0)
+    override fun calculateScore(): HardSoftScore {
+        val solution = workingSolution ?: return HardSoftScore.valueOf(0, 0)
 
         // softScore is the sum of student priorities
         val softScore = solution.students.sumBy { it.chosenApplication?.priority ?: 0 }
 
-        // mediumScore is the number of students without a project (negative)
-        val mediumScore = -solution.students.count { it.chosenApplication == null }
-
         var hardScore = 0
         for (project in solution.projects) {
-            var tooFew = false
+            val totalAttendance = project.attendance.sum()
             Role.values().forEachIndexed { i, role ->
                 val attendance = project.attendance[i]
+                val min = project.roles.getMin(role)
                 val max = project.roles.getMax(role)
                 if (attendance > max) {
                     // hard constraint: too many students
                     hardScore -= attendance - max
-                } else if (!tooFew && attendance < project.roles.getMin(role)) {
-                    tooFew = true
+                } else if (totalAttendance > 0 && attendance < min) {
+                    // hard constraint: too few students
+                    hardScore -= min - attendance
                 }
-            }
-
-            // hard constraint: too few students
-            if (tooFew) {
-                hardScore -= project.attendance.sum()
             }
         }
 
-        return HardMediumSoftScore.valueOf(hardScore, mediumScore, softScore)
+        return HardSoftScore.valueOf(hardScore, softScore)
     }
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        fun debugScore(solution: ProjectAssignment) {
+            AssignmentScoreCalculator().apply {
+                resetWorkingSolution(solution)
+            }
+
+            for (project in solution.projects) {
+                val totalAttendance = project.attendance.sum()
+                Role.values().forEachIndexed { i, role ->
+                    val attendance = project.attendance[i]
+                    val max = project.roles.getMax(role)
+                    val min = project.roles.getMin(role)
+                    if (attendance > max) {
+                        // hard constraint: too many students
+                        logger.warn { "${attendance - max} too many students in $role for $project: $attendance > $max" }
+                    } else if (totalAttendance > 0 && attendance < min) {
+                        logger.warn { "${min - attendance} too few students in $role for $project: $attendance < $min, totalAttendance = $totalAttendance" }
+                    }
+                }
+            }
+        }
+    }
 
 }

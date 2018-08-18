@@ -18,11 +18,15 @@ package org.codeberlin.projectdistributor
 
 import mu.KotlinLogging
 import org.codeberlin.projectdistributor.model.ProjectAssignment
+import org.codeberlin.projectdistributor.model.Student
+import org.codeberlin.projectdistributor.score.AssignmentScoreCalculator
 import org.optaplanner.core.api.solver.SolverFactory
 
 object ExecuteOptimizer {
     private val logger = KotlinLogging.logger {}
 
+    private fun List<Student>.print() = sortedBy { it.name }
+            .joinToString("\n\t") { "%-30s %s".format(it.name, it.chosenApplication) }
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -45,11 +49,14 @@ object ExecuteOptimizer {
 
         // Display the result
         logger.info {
-            val (assigned, unassigned) = solved.students.partition { it.chosenApplication != null }
-            "Solved assignement with score ${solved.score}. " +
-                    "Students without project: ${unassigned.size}.\n" +
-                    "Students with projects:\n\t" +
-                    "${assigned.joinToString("\n\t") { "%-20s %s".format(it.name, it.chosenApplication) }}}"
+            val (loosers, winners) = solved.students.partition { it.chosenApplication!!.priority < 0 }
+            "Solved assignement with score ${solved.score}.\n" +
+                    "Students winning applications: ${winners.size}\n\t" +
+                    "${winners.print()}\n" +
+                    "Students loosing applications: ${loosers.size}\n\t" +
+                    "${loosers.print()}\n"
         }
+
+        AssignmentScoreCalculator.debugScore(solved)
     }
 }
