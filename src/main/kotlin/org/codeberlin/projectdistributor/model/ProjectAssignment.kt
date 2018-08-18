@@ -57,6 +57,8 @@ data class ProjectAssignment(
                     app.isMastermind && projectById.containsKey(app.project.id)
                 }
 
+                // normal users get a list of their applications plus a list of fallbacks
+                // owners get a single choice: the project they signed up for
                 val applications = if (masterApp == null) {
                     user.applications.mapNotNull { it.convert(projectById) } + fallBackApplications[user.applications[0].role]!!
                 } else listOf(masterApp.convert(projectById)!!)

@@ -7,14 +7,14 @@ import java.io.File
 
 class AssignmentPersistence : SolutionFileIO<ProjectAssignment> {
     override fun write(solution: ProjectAssignment?, outputSolutionFile: File?) {
-        if (solution == null) return
+        if (solution == null || outputSolutionFile == null) return
 
         // copy the data structure, but replace projects with just references
         val copy = solution.copy(students = solution.students.map { student ->
             student.copy(applications = student.applications.map(Application::toReference))
                     .apply { chosenApplication = student.chosenApplication?.toReference() }
         })
-        outputSolutionFile?.bufferedWriter().use { DataUtil.gson.toJson(copy, it) }
+        outputSolutionFile.bufferedWriter().use { DataUtil.gson.toJson(copy, it) }
     }
 
     override fun read(inputSolutionFile: File?): ProjectAssignment {
@@ -23,6 +23,7 @@ class AssignmentPersistence : SolutionFileIO<ProjectAssignment> {
             DataUtil.gson.fromJson(reader, ProjectAssignment::class.java)
         }
 
+        // since this field is transient we have to manually initialise the array
         solution.projects.forEach { it.attendance = intArrayOf(0, 0, 0, 0) }
 
         val projectById = solution.projects.map { it.id to it }.toMap()
