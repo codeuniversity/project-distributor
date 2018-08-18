@@ -8,18 +8,12 @@
         <!--<initializingScoreTrend>ONLY_DOWN/ONLY_DOWN</initializingScoreTrend>-->
     </scoreDirectorFactory>
     <termination>
-        <secondsSpentLimit>30</secondsSpentLimit>
+        <secondsSpentLimit>600</secondsSpentLimit>
     </termination>
     <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
     </constructionHeuristic>
     <localSearch>
-        <unionMoveSelector>
-            <changeMoveSelector/>
-            <swapMoveSelector/>
-            <pillarChangeMoveSelector/>
-            <pillarSwapMoveSelector/>
-        </unionMoveSelector>
         <acceptor>
             <simulatedAnnealingStartingTemperature>100hard/500soft</simulatedAnnealingStartingTemperature>
         </acceptor>

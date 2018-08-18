@@ -36,21 +36,22 @@ object ExecuteOptimizer {
                 .buildSolver()
 
         // Load the data
-        val jsonStream = javaClass.getResourceAsStream("/project-applications.json")
-        if (jsonStream == null) {
+        val data = Optimizer.loadMainData()
+        if (data == null) {
             logger.warn { "please put a file called project-applications.json into the src/main/resources folder" }
             return
         }
-        val data = DataUtil.fromStream(jsonStream).data
         val unsolved = ProjectAssignment.convert(data)
+        unsolved.debugContent()
 
         // Solve the problem
         val solved = solver.solve(unsolved)
+        solved.debugContent()
 
         // Display the result
         logger.info {
             val (winners, losers) = solved.students.partition { it.chosenApplication!!.priority > 0 }
-            "Solved assignement with score ${solved.score}.\n" +
+            "Solved assignment with score ${solved.score}.\n" +
                     "Students winning applications: ${winners.size}\n\t" +
                     "${winners.print()}\n" +
                     "Students losing applications: ${losers.size}\n\t" +

@@ -26,13 +26,13 @@ class AssignmentScoreCalculator : IncrementalScoreCalculator<ProjectAssignment> 
     override fun beforeVariableChanged(entity: Any?, variableName: String?) = retract(entity)
     override fun afterVariableChanged(entity: Any?, variableName: String?) = insert(entity)
 
-
     private fun insert(entity: Any?) = add(entity as Student, 1)
     private fun retract(entity: Any?) = add(entity as Student, -1)
 
     private fun add(student: Student, value: Int) {
         student.chosenApplication?.apply {
-            project.attendance[role.ordinal] += value
+            val column = if (priority == 10) project.attendance[3] else role.ordinal
+            project.attendance[column] += value
         }
     }
 

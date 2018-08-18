@@ -9,11 +9,11 @@ data class Student(
         val id: String,
         val name: String,
         @ValueRangeProvider(id = "applicationRange")
-        val applications: List<Application?>
+        val applications: List<Application>
 ) {
     constructor() : this("", "", emptyList())
 
-    @PlanningVariable(valueRangeProviderRefs = ["applicationRange"], strengthComparatorClass = ApplicationStrengthComp::class)
+    @PlanningVariable(valueRangeProviderRefs = ["applicationRange"])
     var chosenApplication: Application? = null
 
     override fun toString(): String {
@@ -21,8 +21,3 @@ data class Student(
     }
 }
 
-class ApplicationStrengthComp : Comparator<Application> {
-    override fun compare(a: Application, b: Application): Int {
-        return -a.priority.compareTo(b.priority)
-    }
-}

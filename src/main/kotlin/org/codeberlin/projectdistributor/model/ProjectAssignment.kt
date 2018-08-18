@@ -1,5 +1,6 @@
 package org.codeberlin.projectdistributor.model
 
+import mu.KLogging
 import org.codeberlin.projectdistributor.data.Data
 import org.codeberlin.projectdistributor.data.Duration
 import org.codeberlin.projectdistributor.data.Role
@@ -19,12 +20,28 @@ data class ProjectAssignment(
     @PlanningScore
     var score: HardSoftScore? = null
 
+    fun debugContent() {
+        logger.debug {
+            "ProjectAssignment $score:" +
+                    "\nProjects:\n\t" +
+                    projects.joinToString("\n\t") +
+                    "\nApplications:\n\t" +
+                    students.flatMap { student ->
+                        val (real, fallback) = student.applications.partition { it.priority > 0 }
+                        real.map { "$student $it" }.plusElement(
+                                "$student ${fallback.size} fallbacks with role ${fallback[0].role}"
+                        )
+                    }.joinToString("\n\t")
+        }
+    }
 
-    companion object {
+    companion object : KLogging() {
         // create a model from parsed json data
         fun convert(data: Data): ProjectAssignment {
             // convert to model class
-            val projects = data.projects.map { Project(it.duration, it.name, it.id, it.roles) }
+            val projects = data.projects.filter { project ->
+                project.duration == Duration.FULL
+            }.map { Project(it.duration, it.name, it.id, it.roles) }
 
             // hashmap of projects by id
             val projectById = projects.asSequence().map {
@@ -32,17 +49,21 @@ data class ProjectAssignment(
             }.toMap()
 
             val fallBackApplications = Role.values().map { role ->
-                role to projects.filter { it.duration == Duration.FULL && it.roles.getMin(role) > 0 }.map { Application(role, -20, it) }
+                role to projects.filter { it.roles.getMin(role) > 0 }.map { Application(role, -20, it) }
             }.toMap()
 
-            val filteredUsers = data.users.filter { it.applications.find { it.isMastermind } == null }
-            val students = filteredUsers.map {
-                val allApps = it.applications.map {
-                    Application(it.role, it.priority, projectById[it.project.id]!!)
+            val students = data.users.map { user ->
+                val masterApp = user.applications.find { app ->
+                    app.isMastermind && projectById.containsKey(app.project.id)
                 }
-                val applications = allApps.filter { it.project.duration == Duration.FULL }
-                Student(it.id, it.name, applications.plus(fallBackApplications[it.applications[0].role]!!))
+
+                val applications = if (masterApp == null) {
+                    user.applications.mapNotNull { it.convert(projectById) } + fallBackApplications[user.applications[0].role]!!
+                } else listOf(masterApp.convert(projectById)!!)
+
+                Student(user.id, user.name, applications)
             }
+
             return ProjectAssignment(projects, students)
         }
     }

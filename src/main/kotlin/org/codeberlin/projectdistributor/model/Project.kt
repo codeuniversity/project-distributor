@@ -10,7 +10,8 @@ data class Project(
         val roles: Roles
 ) {
     // for keeping track of enrolled students during modelling
-    val attendance: IntArray = intArrayOf(0, 0, 0)
+    // ID, PM, SE, owner
+    val attendance: IntArray = intArrayOf(0, 0, 0, 0)
 
     override fun toString(): String {
         return if (duration == Duration.HALF) "HALF $name" else name
