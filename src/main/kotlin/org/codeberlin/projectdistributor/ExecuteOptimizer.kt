@@ -16,11 +16,15 @@
 
 package org.codeberlin.projectdistributor
 
+import com.google.gson.GsonBuilder
 import mu.KotlinLogging
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import org.codeberlin.projectdistributor.model.Student
 import org.codeberlin.projectdistributor.score.AssignmentScoreCalculator
 import org.optaplanner.core.api.solver.SolverFactory
+import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 object ExecuteOptimizer {
     private val logger = KotlinLogging.logger {}
@@ -38,12 +42,21 @@ object ExecuteOptimizer {
         // Load the data
         val data = Optimizer.loadMainData()
 
+        val fmt = DateTimeFormatter.ofPattern("uuuu-MM-dd_HHmmss")
+        val tstamp = fmt.format(LocalDateTime.now())
+
         val unsolved = ProjectAssignment.convert(data)
         unsolved.debugContent()
+
+        val name = "$tstamp-unsolved"
+        val gson = GsonBuilder().setPrettyPrinting().create()
+        File("local/data/results/$tstamp-unsolved.json").bufferedWriter().use { gson.toJson(unsolved, it) }
+
 
         // Solve the problem
         val solved = solver.solve(unsolved)
         solved.debugContent()
+        File("local/data/$tstamp-solved-${fmt.format(LocalDateTime.now())}.json").bufferedWriter().use { gson.toJson(solved, it) }
 
         // Display the result
         logger.info {

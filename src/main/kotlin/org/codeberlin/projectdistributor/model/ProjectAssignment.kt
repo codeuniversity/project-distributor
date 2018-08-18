@@ -18,7 +18,7 @@ data class ProjectAssignment(
     constructor() : this(emptyList(), emptyList())
 
     @PlanningScore
-    var score: HardSoftScore? = null
+    @Transient var score: HardSoftScore? = null
 
     fun debugContent() {
         logger.debug {

@@ -21,7 +21,7 @@
 		<name>Tabu Search</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<unionMoveSelector>
@@ -44,7 +44,7 @@
 		<name>Tabu Search 5</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<unionMoveSelector>
@@ -67,7 +67,7 @@
 		<name>Simulated Annealing 0-1</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<unionMoveSelector>
@@ -90,7 +90,7 @@
 		<name>Simulated Annealing 0-4</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<unionMoveSelector>
@@ -113,7 +113,7 @@
 		<name>Simulated Annealing 0-40</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<unionMoveSelector>
@@ -136,7 +136,7 @@
 		<name>Simulated Annealing 0-400</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<unionMoveSelector>
@@ -159,7 +159,7 @@
 		<name>Simulated Annealing 0-4000</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<unionMoveSelector>
@@ -182,7 +182,7 @@
 		<name>Late Acceptance</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<unionMoveSelector>
