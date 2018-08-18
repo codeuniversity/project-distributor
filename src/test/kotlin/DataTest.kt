@@ -23,6 +23,8 @@ class DataTest {
         assertEquals(2, data.projects.size)
         assertEquals(2, data.users.size)
 
+        assertNotNull(data.projects[0])
+
         println("Projects:")
         data.projects.forEach { project ->
             println("   $project")

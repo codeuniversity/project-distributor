@@ -44,12 +44,10 @@ object Optimizer {
                             "student ${user.name} is applying for a project with id \"${ref.id}\" " +
                                     "which was not found in the projects list"
                         }
-                    } else {
-                        if (project.roles.getMax(application.role) == 0) {
-                            logger.warn {
-                                "student ${user.name}, role ${application.role}, ${if (application.isMastermind) "ProjectOwner" else "Priorität ${application.priority}"}, " +
-                                        "project \"${project.name}\": ${project.roles}"
-                            }
+                    } else if (!application.isMastermind && project.roles.getMax(application.role) == 0) {
+                        logger.warn {
+                            "student ${user.name}, role ${application.role}, ${if (application.isMastermind) "ProjectOwner" else "Priorität ${application.priority}"}, " +
+                                    "project \"${project.name}\": ${project.roles}"
                         }
                     }
                 }
@@ -60,7 +58,7 @@ object Optimizer {
                 logger.warn { "user has is a multi masterMind: ${user.name} => ${user.applications}" }
             }
             if (masterMindCount != 1 && user.applications.size != 3) {
-                logger.warn { "user does not have exactly 3 applications: ${user.name} => ${user.applications}" }
+                logger.trace { "user does not have exactly 3 applications: ${user.name} => ${user.applications}" }
             }
 
             val prioSum = user.applications.asSequence().filterNot { it.isMastermind }.sumBy { it.priority }
@@ -80,14 +78,15 @@ object Optimizer {
     }
 
     private fun projectStats(data: Data, projects: Map<String, Project>) {
-        Role.values().forEach { role ->
-            logger.info {
+        logger.trace {
+            Role.values().joinToString("\n", "checking where min != max for each role\n") { role ->
                 val subset = projects.values.filter { it.roles.getMin(role) != it.roles.getMax(role) }
                 "applications where min$role != max$role: ${subset.size}\n${subset.joinToString("\n\t", "\t")}"
             }
         }
 
-        logger.debug {
+
+        logger.trace {
             "applications by project:\n${
             data.users.asSequence()
                     .flatMap { it.applications.asSequence() }
@@ -111,13 +110,7 @@ object Optimizer {
         }
 
         logger.debug {
-            "stakeholders:\n${
-            data.projects.asSequence()
-                    .filter { it.stakeholder.organization.isNotEmpty() }
-                    .groupBy { it.stakeholder.organization }.asSequence()
-                    .sortedByDescending { it.value.size }
-                    .joinToString("\n") { entry -> "${entry.key}: ${entry.value.map { it.name }}" }
-            }"
+            ""
         }
     }
 }
