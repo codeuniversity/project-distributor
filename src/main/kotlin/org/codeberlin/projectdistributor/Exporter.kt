@@ -24,6 +24,6 @@ object Exporter {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        Optimizer.loadMainData()?.exportApplications()
+        Optimizer.loadMainData().exportApplications()
     }
 }

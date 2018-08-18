@@ -2,6 +2,7 @@ package org.codeberlin.projectdistributor
 
 import com.google.gson.GsonBuilder
 import org.codeberlin.projectdistributor.data.ProjectData
+import java.io.File
 import java.io.InputStream
 
 object DataUtil {
@@ -11,5 +12,9 @@ object DataUtil {
 
     fun fromStream(stream: InputStream): ProjectData {
         return GsonBuilder().create().fromJson(stream.bufferedReader(), ProjectData::class.java)
+    }
+
+    fun fromFile(path: String): ProjectData {
+        return GsonBuilder().create().fromJson(File(path).bufferedReader(), ProjectData::class.java)
     }
 }

@@ -4,22 +4,22 @@ import mu.KotlinLogging
 import org.codeberlin.projectdistributor.data.Data
 import org.codeberlin.projectdistributor.data.Project
 import org.codeberlin.projectdistributor.data.Role
+import java.io.File
 
 
 object Optimizer {
     private val logger = KotlinLogging.logger {}
 
-    fun loadMainData() = javaClass.getResourceAsStream("/project-applications.json")
-            ?.let { DataUtil.fromStream(it).data }
+    fun loadMainData(): Data {
+        if (!File("project-distributor-data").isDirectory) {
+            logger.warn { "please clone the project-distributor-data repository into this folder" }
+        }
+        return DataUtil.fromFile("project-distributor-data/project-applications.json").data
+    }
 
     @JvmStatic
     fun main(args: Array<String>) {
         val data = loadMainData()
-        if (data == null) {
-            logger.warn { "please put a file called project-applications.json into the src/main/resources folder" }
-            return
-        }
-
         logger.debug { "data loaded: ${data.projects.size} projects and ${data.users.size} users" }
         checkDataConsistency(data)
     }

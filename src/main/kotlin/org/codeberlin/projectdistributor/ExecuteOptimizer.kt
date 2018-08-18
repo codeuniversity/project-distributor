@@ -37,10 +37,7 @@ object ExecuteOptimizer {
 
         // Load the data
         val data = Optimizer.loadMainData()
-        if (data == null) {
-            logger.warn { "please put a file called project-applications.json into the src/main/resources folder" }
-            return
-        }
+
         val unsolved = ProjectAssignment.convert(data)
         unsolved.debugContent()
 
