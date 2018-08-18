@@ -49,12 +49,12 @@ object ExecuteOptimizer {
 
         // Display the result
         logger.info {
-            val (loosers, winners) = solved.students.partition { it.chosenApplication!!.priority < 0 }
+            val (winners, losers) = solved.students.partition { it.chosenApplication!!.priority > 0 }
             "Solved assignement with score ${solved.score}.\n" +
                     "Students winning applications: ${winners.size}\n\t" +
                     "${winners.print()}\n" +
-                    "Students loosing applications: ${loosers.size}\n\t" +
-                    "${loosers.print()}\n"
+                    "Students losing applications: ${losers.size}\n\t" +
+                    "${losers.print()}\n"
         }
 
         AssignmentScoreCalculator.debugScore(solved)

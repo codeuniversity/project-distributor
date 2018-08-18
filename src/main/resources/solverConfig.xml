@@ -21,7 +21,7 @@
             <pillarSwapMoveSelector/>
         </unionMoveSelector>
         <acceptor>
-            <simulatedAnnealingStartingTemperature>0hard/400soft</simulatedAnnealingStartingTemperature>
+            <simulatedAnnealingStartingTemperature>100hard/500soft</simulatedAnnealingStartingTemperature>
         </acceptor>
         <forager>
             <acceptedCountLimit>4</acceptedCountLimit>
