@@ -14,10 +14,10 @@ object DataUtil {
     }
 
     fun fromStream(stream: InputStream): ProjectData {
-        return gson.fromJson(stream.bufferedReader(), ProjectData::class.java)
+        return stream.bufferedReader().use { gson.fromJson(it, ProjectData::class.java) }
     }
 
     fun fromFile(path: String): ProjectData {
-        return gson.fromJson(File(path).bufferedReader(), ProjectData::class.java)
+        return File(path).bufferedReader().use { gson.fromJson(it, ProjectData::class.java) }
     }
 }
