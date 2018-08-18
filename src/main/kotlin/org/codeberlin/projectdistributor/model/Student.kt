@@ -9,11 +9,12 @@ data class Student(
         val id: String,
         val name: String,
         @ValueRangeProvider(id = "applicationRange")
-        val applications: List<Application>,
-        @PlanningVariable(valueRangeProviderRefs = ["applicationRange"], strengthComparatorClass = ApplicationStrength::class)
-        var chosenApplication: Application? = null
+        val applications: List<Application>
 ) {
     constructor() : this("", "", emptyList())
+
+    @PlanningVariable(valueRangeProviderRefs = ["applicationRange"], strengthComparatorClass = ApplicationStrength::class)
+    var chosenApplication: Application? = null
 
     override fun toString(): String {
         return name

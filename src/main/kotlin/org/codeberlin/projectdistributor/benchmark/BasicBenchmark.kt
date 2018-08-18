@@ -17,23 +17,32 @@
 package org.codeberlin.projectdistributor.benchmark
 
 import mu.KotlinLogging
+import org.codeberlin.projectdistributor.AssignmentPersistence
 import org.codeberlin.projectdistributor.Optimizer
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import org.optaplanner.benchmark.api.PlannerBenchmarkFactory
+import java.io.File
 
 object BasicBenchmark {
     private val logger = KotlinLogging.logger {}
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val data = Optimizer.loadMainData()
+        val target = File("local/data/input/unsolved.json")
+        if (!target.exists()) {
+            File("local/data/input").mkdirs()
+
+            val data = Optimizer.loadMainData()
+            val base = ProjectAssignment.convert(data)
+            AssignmentPersistence().write(base, target)
+        }
 
         // Build the PlannerBenchmark
         val benchmark = args.getOrNull(0) ?: "benchmark/basic.xml"
         logger.info { "benchmarking $benchmark" }
 
         PlannerBenchmarkFactory.createFromXmlResource(benchmark)
-                .buildPlannerBenchmark(ProjectAssignment.convert(data))
+                .buildPlannerBenchmark()
                 .benchmarkAndShowReportInBrowser()
     }
 

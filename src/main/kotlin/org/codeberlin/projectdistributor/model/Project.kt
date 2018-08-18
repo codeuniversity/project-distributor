@@ -11,7 +11,7 @@ data class Project(
 ) {
     // for keeping track of enrolled students during modelling
     // ID, PM, SE, owner
-    @Transient val attendance: IntArray = intArrayOf(0, 0, 0, 0)
+    @Transient var attendance: IntArray = intArrayOf(0, 0, 0, 0)
 
     override fun toString(): String {
         return if (duration == Duration.HALF) "HALF $name" else name ?: id

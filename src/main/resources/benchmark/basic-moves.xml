@@ -7,6 +7,7 @@
 	<inheritedSolverBenchmark>
 		<problemBenchmarks>
 			<solutionFileIOClass>org.codeberlin.projectdistributor.AssignmentPersistence</solutionFileIOClass>
+			<inputSolutionFileList>local/data/input/unsolved.json</inputSolutionFileList>
 			<writeOutputSolutionEnabled>true</writeOutputSolutionEnabled>
 		</problemBenchmarks>
 		<solver>
@@ -16,7 +17,7 @@
 				<incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.AssignmentScoreCalculator</incrementalScoreCalculatorClass>
 			</scoreDirectorFactory>
 			<termination>
-				<secondsSpentLimit>600</secondsSpentLimit>
+				<secondsSpentLimit>120</secondsSpentLimit>
 			</termination>
 		</solver>
 	</inheritedSolverBenchmark>
@@ -98,7 +99,7 @@
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/4soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/4soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -115,7 +116,24 @@
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/40soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/40soft</simulatedAnnealingStartingTemperature>
+				</acceptor>
+				<forager>
+					<acceptedCountLimit>4</acceptedCountLimit>
+				</forager>
+			</localSearch>
+		</solver>
+	</solverBenchmark>
+
+	<solverBenchmark>
+		<name>SimAnn 0-40 dec</name>
+		<solver>
+			<constructionHeuristic>
+				<constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+			</constructionHeuristic>
+			<localSearch>
+				<acceptor>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/40soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -132,7 +150,7 @@
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/40soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/40soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -149,7 +167,7 @@
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/40soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/40soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>1</acceptedCountLimit>
@@ -166,7 +184,7 @@
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/400soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/400soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -183,7 +201,7 @@
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>100hard/500soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>100hard/0medium/500soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -200,7 +218,7 @@
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/4000soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/4000soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -217,7 +235,7 @@
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/4000soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/4000soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>

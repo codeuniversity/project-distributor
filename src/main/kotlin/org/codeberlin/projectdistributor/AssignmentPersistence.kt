@@ -11,8 +11,8 @@ class AssignmentPersistence : SolutionFileIO<ProjectAssignment> {
 
         // copy the data structure, but replace projects with just references
         val copy = solution.copy(students = solution.students.map { student ->
-            student.copy(chosenApplication = student.chosenApplication?.toReference(),
-                    applications = student.applications.map(Application::toReference))
+            student.copy(applications = student.applications.map(Application::toReference))
+                    .apply { chosenApplication = student.chosenApplication?.toReference() }
         })
         outputSolutionFile?.bufferedWriter().use { DataUtil.gson.toJson(copy, it) }
     }
@@ -23,12 +23,14 @@ class AssignmentPersistence : SolutionFileIO<ProjectAssignment> {
             DataUtil.gson.fromJson(reader, ProjectAssignment::class.java)
         }
 
+        solution.projects.forEach { it.attendance = intArrayOf(0, 0, 0, 0) }
+
         val projectById = solution.projects.map { it.id to it }.toMap()
         fun Application.toFull() = copy(project = projectById[project.id]!!)
 
         return solution.copy(students = solution.students.map { student ->
-            student.copy(chosenApplication = student.chosenApplication?.toFull(),
-                    applications = student.applications.map(Application::toFull))
+            student.copy(applications = student.applications.map(Application::toFull))
+                    .apply { chosenApplication = student.chosenApplication?.toFull() }
         })
     }
 
