@@ -18,6 +18,7 @@ package org.codeberlin.projectdistributor
 
 import mu.KotlinLogging
 import org.codeberlin.projectdistributor.Analyser.analyseSolution
+import org.codeberlin.projectdistributor.Visualiser.visualiseSolution
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import org.codeberlin.projectdistributor.model.Student
 import org.optaplanner.core.api.solver.SolverFactory
@@ -27,6 +28,7 @@ import java.time.format.DateTimeFormatter
 
 object ExecuteOptimizer {
     private val logger = KotlinLogging.logger {}
+    val resultDir = "local/data/results"
 
     fun List<Student>.print() = sortedBy { it.name }
             .joinToString("\n\t") { "%-30s %s".format(it.name, it.chosenApplication) }
@@ -48,12 +50,17 @@ object ExecuteOptimizer {
 
         // Solve the problem
         val solved = solver.solve(unsolved)
-        solved.export("$tstamp-solved-${fmt.format(LocalDateTime.now())}-${solved.score?.hardScore}-${solved.score?.softScore}")
+        val outputName = "$tstamp-solved-${fmt.format(LocalDateTime.now())}-${solved.score?.hardScore}-${solved.score?.softScore}"
+        solved.export(outputName)
 
         analyseSolution(solved)
+
+        val outputPath = "$resultDir/$outputName.json"
+        logger.info { "saved result at $outputPath" }
+        visualiseSolution(solved, outputPath)
     }
 
     private fun ProjectAssignment.export(name: String) {
-        AssignmentPersistence().write(this, File(File("local/data/results").apply { mkdirs() }, "$name.json"))
+        AssignmentPersistence().write(this, File(File(resultDir).apply { mkdirs() }, "$name.json"))
     }
 }
