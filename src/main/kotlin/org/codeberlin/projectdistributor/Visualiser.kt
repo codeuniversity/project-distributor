@@ -88,9 +88,9 @@ object Visualiser {
         val projectSheet = book.createSheet("projects")
 
         val supHeader = projectSheet.createRow(0)
-        val header = projectSheet.writeRow(1, "Name", "Students", style = bold)
+        val header = projectSheet.writeRow(1, "Name", "Students", "Score", style = bold)
         Role.values().forEachIndexed { i, role ->
-            val col = 2 + i * 5
+            val col = 3 + i * 5
             supHeader.writeValues("$role", offset = col, style = boldCenter)
             projectSheet.addMergedRegion(CellRangeAddress(0, 0, col,col + 4))
             header.writeValues("min", "max", "chosen", "owners", "apps",
@@ -101,29 +101,38 @@ object Visualiser {
             it.applications.asSequence().filter { app -> app.priority > 0 }
         }.groupBy { it.project }
 
-        val chosen = solved.students.asSequence().mapNotNull {
+        val chosenByProject = solved.students.asSequence().mapNotNull {
             it.chosenApplication
         }.groupBy { it.project }
 
         solved.projects.forEachIndexed { i, project ->
-            val row = projectSheet.writeRow(i + 2, project.name, chosen[project]?.size)
-            val apps = (fullApps[project] ?: emptyList()).groupBy { it.role }
-            val choices = (chosen[project] ?: emptyList()).groupBy { it.role }
+            val chosen = chosenByProject[project]
+            val apps = fullApps[project]?.groupBy { it.role }
+            val choices = chosen?.groupBy { it.role }
+
+            val row = projectSheet.writeRow(i + 2,
+                    project.name,
+                    chosen?.size,
+                    chosen?.sumBy { it.priority })
 
             Role.values().forEachIndexed { col, role ->
                 row.writeValues(
                         project.roles?.getMin(role),
                         project.roles?.getMax(role),
-                        choices[role]?.count { it.priority < 10 },
-                        choices[role]?.count { it.priority == 10 },
-                        apps[role]?.size,
-                        offset = 2 + col * 5)
+                        choices?.get(role)?.count { it.priority < 10 },
+                        choices?.get(role)?.count { it.priority == 10 },
+                        apps?.get(role)?.size,
+                        offset = 3 + col * 5)
             }
         }
 
         for (i in 0..6) studentSheet.autoSizeColumn(i)
         for (i in 0..4) appSheet.autoSizeColumn(i)
         for (i in 0..(2 + Role.values().size * 5)) projectSheet.autoSizeColumn(i)
+
+        studentSheet.createFreezePane(0, 1)
+        appSheet.createFreezePane(0, 1)
+        projectSheet.createFreezePane(0, 2)
 
         // Display the result
         out.outputStream().use { book.write(it) }
