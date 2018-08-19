@@ -14,47 +14,14 @@
 			<solutionClass>org.codeberlin.projectdistributor.model.ProjectAssignment</solutionClass>
 			<entityClass>org.codeberlin.projectdistributor.model.Student</entityClass>
 			<scoreDirectorFactory>
-				<incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.AssignmentScoreCalculator</incrementalScoreCalculatorClass>
+				<incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.FastAssignmentScoreCalculator</incrementalScoreCalculatorClass>
 			</scoreDirectorFactory>
 			<termination>
-				<minutesSpentLimit>10</minutesSpentLimit>
+				<minutesSpentLimit>3</minutesSpentLimit>
 			</termination>
+			<environmentMode>NON_REPRODUCIBLE</environmentMode>
 		</solver>
 	</inheritedSolverBenchmark>
-
-	<solverBenchmark>
-		<name>Tabu Search</name>
-		<solver>
-			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-			</constructionHeuristic>
-			<localSearch>
-				<acceptor>
-					<entityTabuSize>7</entityTabuSize>
-				</acceptor>
-				<forager>
-					<acceptedCountLimit>40000</acceptedCountLimit>
-				</forager>
-			</localSearch>
-		</solver>
-	</solverBenchmark>
-
-	<solverBenchmark>
-		<name>Tabu Search 0.02</name>
-		<solver>
-			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-			</constructionHeuristic>
-			<localSearch>
-				<acceptor>
-					<entityTabuRatio>0.02</entityTabuRatio>
-				</acceptor>
-				<forager>
-					<acceptedCountLimit>40000</acceptedCountLimit>
-				</forager>
-			</localSearch>
-		</solver>
-	</solverBenchmark>
 
 	<solverBenchmark>
 		<name>Tabu Search Cheap</name>
@@ -74,14 +41,14 @@
 	</solverBenchmark>
 
 	<solverBenchmark>
-		<name>SimAnn 0-40</name>
+		<name>SimAnn 0-15</name>
 		<solver>
 			<constructionHeuristic>
 				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/0medium/40soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/15soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -91,10 +58,10 @@
 	</solverBenchmark>
 
 	<solverBenchmark>
-		<name>SimAnn 0-40 dec</name>
+		<name>SimAnn 0-40</name>
 		<solver>
 			<constructionHeuristic>
-				<constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
 			</constructionHeuristic>
 			<localSearch>
 				<acceptor>
@@ -125,7 +92,7 @@
 	</solverBenchmark>
 
 	<solverBenchmark>
-		<name>SimAnn 0-40 limit-1</name>
+		<name>SimAnn 0-40 cheap limit-1</name>
 		<solver>
 			<constructionHeuristic>
 				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
