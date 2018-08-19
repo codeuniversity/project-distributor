@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+    <solutionClass>org.codeberlin.projectdistributor.model.ProjectAssignment</solutionClass>
+    <entityClass>org.codeberlin.projectdistributor.model.Student</entityClass>
+    <scoreDirectorFactory>
+        <incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.AssignmentScoreCalculator</incrementalScoreCalculatorClass>
+        <!--<scoreDrl>org/optaplanner/examples/cloudbalancing/solver/cloudBalancingScoreRules.drl</scoreDrl>-->
+        <!--<initializingScoreTrend>ONLY_DOWN/ONLY_DOWN</initializingScoreTrend>-->
+    </scoreDirectorFactory>
+    <termination>
+        <minutesSpentLimit>4</minutesSpentLimit>
+    </termination>
+    <constructionHeuristic>
+        <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
+    </constructionHeuristic>
+    <localSearch>
+        <localSearchType>TABU_SEARCH</localSearchType>
+    </localSearch>
+</solver>

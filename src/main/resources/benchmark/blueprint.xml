@@ -5,6 +5,11 @@
   <warmUpSecondsSpentLimit>10</warmUpSecondsSpentLimit>
 
   <inheritedSolverBenchmark>
+    <problemBenchmarks>
+      <solutionFileIOClass>org.codeberlin.projectdistributor.AssignmentPersistence</solutionFileIOClass>
+      <inputSolutionFileList>local/data/input/unsolved.json</inputSolutionFileList>
+      <writeOutputSolutionEnabled>true</writeOutputSolutionEnabled>
+    </problemBenchmarks>
     <solver>
       <solutionClass>org.codeberlin.projectdistributor.model.ProjectAssignment</solutionClass>
       <entityClass>org.codeberlin.projectdistributor.model.Student</entityClass>
