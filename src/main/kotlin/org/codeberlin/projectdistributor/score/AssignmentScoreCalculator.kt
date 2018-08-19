@@ -8,7 +8,7 @@ import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
 import org.optaplanner.core.impl.score.director.incremental.IncrementalScoreCalculator
 
 class AssignmentScoreCalculator : IncrementalScoreCalculator<ProjectAssignment> {
-    var workingSolution: ProjectAssignment? = null
+    private var workingSolution: ProjectAssignment? = null
 
     override fun resetWorkingSolution(workingSolution: ProjectAssignment?) {
         this.workingSolution = workingSolution?.apply {

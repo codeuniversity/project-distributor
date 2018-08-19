@@ -6,7 +6,7 @@ import org.codeberlin.projectdistributor.data.Data
 object Exporter {
     private val logger = KotlinLogging.logger {}
 
-    fun Data.exportApplications() {
+    private fun Data.exportApplications() {
         // hashmap of projects by id
         val projects = projects.asSequence().map {
             it.id to it
