@@ -28,14 +28,10 @@ object BasicBenchmark {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val target = File("local/data/input/unsolved.json")
-        if (!target.exists()) {
-            File("local/data/input").mkdirs()
-
-            val data = Optimizer.loadMainData()
-            val base = ProjectAssignment.convert(data)
-            AssignmentPersistence().write(base, target)
-        }
+        val target = File(File("local/data/input").apply { mkdirs() }, "unsolved.json")
+        val data = Optimizer.loadMainData()
+        val base = ProjectAssignment.convert(data)
+        AssignmentPersistence().write(base, target)
 
         // Build the PlannerBenchmark
         val benchmark = args.getOrNull(0) ?: "benchmark/basic.xml"

@@ -5,6 +5,11 @@
 	<warmUpSecondsSpentLimit>10</warmUpSecondsSpentLimit>
 
 	<inheritedSolverBenchmark>
+		<problemBenchmarks>
+			<solutionFileIOClass>org.codeberlin.projectdistributor.AssignmentPersistence</solutionFileIOClass>
+			<inputSolutionFileList>local/data/input/unsolved.json</inputSolutionFileList>
+			<writeOutputSolutionEnabled>true</writeOutputSolutionEnabled>
+		</problemBenchmarks>
 		<solver>
 			<solutionClass>org.codeberlin.projectdistributor.model.ProjectAssignment</solutionClass>
 			<entityClass>org.codeberlin.projectdistributor.model.Student</entityClass>
@@ -77,7 +82,7 @@
 					<pillarSwapMoveSelector/>
 				</unionMoveSelector>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/4soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/1soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -100,7 +105,7 @@
 					<pillarSwapMoveSelector/>
 				</unionMoveSelector>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/4soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/4soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -123,7 +128,7 @@
 					<pillarSwapMoveSelector/>
 				</unionMoveSelector>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/40soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/40soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -146,7 +151,7 @@
 					<pillarSwapMoveSelector/>
 				</unionMoveSelector>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/400soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/400soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>
@@ -169,7 +174,7 @@
 					<pillarSwapMoveSelector/>
 				</unionMoveSelector>
 				<acceptor>
-					<simulatedAnnealingStartingTemperature>0hard/400soft</simulatedAnnealingStartingTemperature>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/400soft</simulatedAnnealingStartingTemperature>
 				</acceptor>
 				<forager>
 					<acceptedCountLimit>4</acceptedCountLimit>

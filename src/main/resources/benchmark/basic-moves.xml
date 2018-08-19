@@ -17,7 +17,7 @@
 				<incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.AssignmentScoreCalculator</incrementalScoreCalculatorClass>
 			</scoreDirectorFactory>
 			<termination>
-				<secondsSpentLimit>600</secondsSpentLimit>
+				<minutesSpentLimit>10</minutesSpentLimit>
 			</termination>
 		</solver>
 	</inheritedSolverBenchmark>
