@@ -27,12 +27,14 @@ object Analyser {
             val (winners, losers) = solved.students.partition { it.chosenApplication!!.priority > 0 }
             val (running, cancelled) = solved.projects.partition { it.attendance.sum() > 0 }
             "Solved assignment with score ${solved.score}.\n" +
-                    "Students winning applications: ${winners.size}\n\t" +
-                    "${winners.print()}\n" +
-                    "Students losing applications: ${losers.size}\n\t" +
-                    "${losers.print()}\n\n" +
-                    "Projects with students: ${running.size}\n$running\n" +
-                    "Projects without students: ${cancelled.size}\n$cancelled\n"
+                    "Students winning applications: ${winners.size}\n" +
+                    // "\t${winners.print()}\n" +
+                    "Students losing applications: ${losers.size}\n" +
+                    "\t${losers.print()}\n\n" +
+                    "Projects with students: ${running.size}\n" +
+                    // "${running.joinToString()}\n" +
+                    "Projects without students: ${cancelled.size}\n"
+                    // + "${cancelled.joinToString()}\n"
         }
     }
 }
