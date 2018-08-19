@@ -1,6 +1,8 @@
 package org.codeberlin.projectdistributor
 
 import mu.KotlinLogging
+import org.apache.poi.ss.usermodel.HorizontalAlignment
+import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.xssf.usermodel.*
 import org.codeberlin.projectdistributor.data.Role
 import org.codeberlin.projectdistributor.model.ProjectAssignment
@@ -43,6 +45,11 @@ object Visualiser {
             setFont(book.createFont().also { it.bold = true })
         }
 
+        val boldCenter = book.createCellStyle().apply {
+            cloneStyleFrom(bold)
+            setAlignment(HorizontalAlignment.CENTER)
+        }
+
         fun XSSFSheet.writeHeader(vararg values: Any?) = writeRow(0, *values, style = bold)
 
         // Overview Students
@@ -79,14 +86,19 @@ object Visualiser {
         // Overview Projects
         // name, for each role: { min, max, number of applications, chosen-non owners, owners }
         val projectSheet = book.createSheet("projects")
-        val header = projectSheet.writeHeader("Name", "Students")
+
+        val supHeader = projectSheet.createRow(0)
+        val header = projectSheet.writeRow(1, "Name", "Students", style = bold)
         Role.values().forEachIndexed { i, role ->
-            header.writeValues("$role min", "$role max", "$role apps", "$role chosen", "$role owners",
-                    offset = 2 + i * 5, style = bold)
+            val col = 2 + i * 5
+            supHeader.writeValues("$role", offset = col, style = boldCenter)
+            projectSheet.addMergedRegion(CellRangeAddress(0, 0, col,col + 4))
+            header.writeValues("min", "max", "chosen", "owners", "apps",
+                    offset = col, style = bold)
         }
 
         val fullApps = solved.students.asSequence().flatMap {
-            it.applications.asSequence().filter { it.priority > 0 }
+            it.applications.asSequence().filter { app -> app.priority > 0 }
         }.groupBy { it.project }
 
         val chosen = solved.students.asSequence().mapNotNull {
@@ -94,7 +106,7 @@ object Visualiser {
         }.groupBy { it.project }
 
         solved.projects.forEachIndexed { i, project ->
-            val row = projectSheet.writeRow(i + 1, project.name, chosen[project]?.size)
+            val row = projectSheet.writeRow(i + 2, project.name, chosen[project]?.size)
             val apps = (fullApps[project] ?: emptyList()).groupBy { it.role }
             val choices = (chosen[project] ?: emptyList()).groupBy { it.role }
 
@@ -102,9 +114,9 @@ object Visualiser {
                 row.writeValues(
                         project.roles?.getMin(role),
                         project.roles?.getMax(role),
-                        apps[role]?.size,
                         choices[role]?.count { it.priority < 10 },
                         choices[role]?.count { it.priority == 10 },
+                        apps[role]?.size,
                         offset = 2 + col * 5)
             }
         }
