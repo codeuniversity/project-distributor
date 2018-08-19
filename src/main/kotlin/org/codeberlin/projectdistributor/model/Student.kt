@@ -8,13 +8,24 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable
 data class Student(
         val id: String,
         val name: String,
-        @ValueRangeProvider(id = "applicationRange")
         val applications: List<Application>
 ) {
     constructor() : this("", "", emptyList())
 
-    @PlanningVariable(valueRangeProviderRefs = ["applicationRange"], strengthComparatorClass = ApplicationStrength::class)
-    var chosenApplication: Application? = null
+    // reverse so that the first items are picked before the last
+    @Transient
+    val projectMap = applications.reversed().map { it.project to it }.toMap()
+
+    // reversed so we get the original order, minus duplicates
+    @Transient
+    @ValueRangeProvider(id = "projects")
+    val projects = projectMap.keys.reversed()
+
+    @PlanningVariable(valueRangeProviderRefs = ["projects"])
+    var chosenProject: Project? = null
+
+    val chosenApplication: Application?
+        get() = projectMap[chosenProject]
 
     override fun toString(): String {
         return name

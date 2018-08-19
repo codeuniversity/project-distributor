@@ -12,5 +12,5 @@ data class Application(
     }
 
     // returns a copy that replaced the project with just a reference
-    fun toReference() = copy(project = Project(null, null, project.id, null))
+    fun toReference() = copy(project = project.toReference())
 }

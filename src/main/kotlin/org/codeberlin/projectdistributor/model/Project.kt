@@ -16,4 +16,6 @@ data class Project(
     override fun toString(): String {
         return if (duration == Duration.HALF) "HALF $name" else name ?: id
     }
+
+    fun toReference() = Project(null, null, id, null)
 }
