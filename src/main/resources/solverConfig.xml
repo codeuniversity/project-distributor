@@ -8,7 +8,7 @@
         <!--<initializingScoreTrend>ONLY_DOWN/ONLY_DOWN</initializingScoreTrend>-->
     </scoreDirectorFactory>
     <termination>
-        <minutesSpentLimit>120</minutesSpentLimit>
+        <minutesSpentLimit>5</minutesSpentLimit>
     </termination>
     <constructionHeuristic>
         <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
