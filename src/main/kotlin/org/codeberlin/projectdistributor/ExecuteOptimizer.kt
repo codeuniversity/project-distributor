@@ -28,13 +28,15 @@ import java.time.format.DateTimeFormatter
 
 object ExecuteOptimizer {
     private val logger = KotlinLogging.logger {}
-    val resultDir = "local/data/results"
+    private const val resultDir = "local/data/results"
 
     fun List<Student>.print() = sortedBy { it.name }
             .joinToString("\n\t") { "%-30s %s".format(it.name, it.chosenApplication) }
 
     @JvmStatic
     fun main(args: Array<String>) {
+        logger.info { "Starting optimizer execution (args: ${args.toList()})" }
+
         // Build the Solver
         val solver = SolverFactory.createFromXmlResource<ProjectAssignment>(
                 "solverConfig.xml").buildSolver()
@@ -56,8 +58,9 @@ object ExecuteOptimizer {
         analyseSolution(solved)
 
         val outputPath = "$resultDir/$outputName.json"
-        logger.info { "saved result at $outputPath" }
+        logger.info { "saved result at $outputPath, visualizing in excel" }
         visualiseSolution(solved, outputPath)
+        logger.info { "done" }
     }
 
     private fun ProjectAssignment.export(name: String) {
