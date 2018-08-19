@@ -1,5 +1,6 @@
 package org.codeberlin.projectdistributor.model
 
+import org.codeberlin.projectdistributor.data.Role
 import org.optaplanner.core.api.domain.entity.PlanningEntity
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider
 import org.optaplanner.core.api.domain.variable.PlanningVariable
@@ -26,6 +27,14 @@ data class Student(
 
     val chosenApplication: Application?
         get() = projectMap[chosenProject]
+
+    // null safe helper for .drl score
+    val chosenAppPriority: Int
+        get() = chosenApplication?.priority ?: 0
+
+    // null safe helper for .drl score
+    val chosenAppRole: Role?
+        get() = chosenApplication?.role
 
     override fun toString(): String {
         return name

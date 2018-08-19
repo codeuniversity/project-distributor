@@ -7,10 +7,12 @@ import org.codeberlin.projectdistributor.data.Role
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty
 import org.optaplanner.core.api.domain.solution.PlanningScore
 import org.optaplanner.core.api.domain.solution.PlanningSolution
+import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProperty
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
 
 @PlanningSolution
 data class ProjectAssignment(
+        @ProblemFactCollectionProperty
         val projects: List<Project>,
         @PlanningEntityCollectionProperty
         val students: List<Student>
@@ -19,6 +21,10 @@ data class ProjectAssignment(
 
     @PlanningScore
     @Transient var score: HardMediumSoftScore? = null
+
+    @ProblemFactCollectionProperty
+    @Transient
+    val roles = Role.values().toList()
 
     fun debugContent() {
         logger.debug {

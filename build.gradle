@@ -37,6 +37,8 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    testCompile group: 'org.optaplanner', name: 'optaplanner-test', version: '7.10.0.Final'
 }
 
 compileKotlin {

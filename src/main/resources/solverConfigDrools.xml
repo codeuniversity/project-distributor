@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+    <solutionClass>org.codeberlin.projectdistributor.model.ProjectAssignment</solutionClass>
+    <entityClass>org.codeberlin.projectdistributor.model.Student</entityClass>
+    <scoreDirectorFactory>
+        <!--<incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.AssignmentScoreCalculator</incrementalScoreCalculatorClass>-->
+        <scoreDrl>solver/scoreRules.drl</scoreDrl>
+        <!--<initializingScoreTrend>ONLY_DOWN/ONLY_DOWN</initializingScoreTrend>-->
+    </scoreDirectorFactory>
+    <constructionHeuristic>
+        <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
+    </constructionHeuristic>
+    <termination>
+        <minutesSpentLimit>20</minutesSpentLimit>
+    </termination>
+    <localSearch>
+        <termination>
+            <stepCountLimit>472089</stepCountLimit>
+        </termination>
+        <acceptor>
+            <simulatedAnnealingStartingTemperature>0hard/0medium/15soft</simulatedAnnealingStartingTemperature>
+        </acceptor>
+        <forager>
+            <acceptedCountLimit>4</acceptedCountLimit>
+        </forager>
+    </localSearch>
+</solver>
