@@ -16,15 +16,19 @@
 
 package org.codeberlin.projectdistributor
 
+import ch.qos.logback.classic.LoggerContext
 import mu.KotlinLogging
 import org.codeberlin.projectdistributor.Analyser.analyseSolution
 import org.codeberlin.projectdistributor.Visualiser.visualiseSolution
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import org.codeberlin.projectdistributor.model.Student
 import org.optaplanner.core.api.solver.SolverFactory
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
+
 
 object ExecuteOptimizer {
     private val logger = KotlinLogging.logger {}
@@ -52,6 +56,7 @@ object ExecuteOptimizer {
 
         // Solve the problem
         val solved = solver.solve(unsolved)
+
         val outputName = "$tstamp-solved-${fmt.format(LocalDateTime.now())}-${solved.score?.hardScore}-${solved.score?.softScore}"
         solved.export(outputName)
 
@@ -61,6 +66,9 @@ object ExecuteOptimizer {
         logger.info { "saved result at $outputPath, visualizing in excel" }
         visualiseSolution(solved, outputPath)
         logger.info { "done" }
+
+        // shutdown logback-classic if available
+        (LoggerFactory.getILoggerFactory() as? LoggerContext)?.stop()
     }
 
     private fun ProjectAssignment.export(name: String) {
