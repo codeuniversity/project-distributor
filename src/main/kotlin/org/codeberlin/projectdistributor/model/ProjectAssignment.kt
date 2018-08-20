@@ -20,7 +20,8 @@ data class ProjectAssignment(
     constructor() : this(emptyList(), emptyList())
 
     @PlanningScore
-    @Transient var score: HardMediumSoftScore? = null
+    @Transient
+    var score: HardMediumSoftScore? = null
 
     @ProblemFactCollectionProperty
     @Transient
@@ -70,6 +71,35 @@ data class ProjectAssignment(
                 } else listOf(masterApp.convert(projectById)!!)
 
                 Student(user.id, user.name, applications)
+            }
+
+            return ProjectAssignment(projects, students)
+        }
+
+
+        // create a model from parsed json data
+        fun convertHalf(data: Data): ProjectAssignment {
+            // convert to model class
+            val projects = data.projects.filter { project ->
+                project.duration == Duration.HALF
+            }.map { Project(it.duration, it.name, it.id, it.roles) }
+
+            // hashmap of projects by id
+            val projectById = projects.asSequence().map {
+                it.id to it
+            }.toMap()
+
+            val students = data.users.mapNotNull { user ->
+                val masterApp = user.applications.find { app -> app.isMastermind }
+
+                val applications = if (masterApp == null) {
+                    user.applications.mapNotNull { it.convert(projectById) }
+                } else {
+                    masterApp.convert(projectById)?.let { listOf(it) } ?: emptyList()
+                }
+
+                if (applications.isEmpty()) null
+                else Student(user.id, user.name, applications)
             }
 
             return ProjectAssignment(projects, students)
