@@ -15,9 +15,16 @@ object Visualiser {
     @JvmStatic
     fun main(args: Array<String>) {
         for (path in args) {
-            logger.info { "Analysing $path" }
-            visualiseSolution(AssignmentPersistence()
-                    .read(File(path)), path)
+            val input = File(path)
+            if (input.isDirectory) {
+                logger.info { "Analysing directory $path" }
+                for (file in input.listFiles { file -> file.name.endsWith(".json") }) {
+                    visualiseSolution(AssignmentPersistence().read(file), file.path, false)
+                }
+            } else {
+                logger.info { "Analysing $path" }
+                visualiseSolution(AssignmentPersistence().read(input), path, args.size == 1)
+            }
         }
     }
 
@@ -37,7 +44,7 @@ object Visualiser {
 
     private fun XSSFSheet.writeRow(rownum: Int, vararg values: Any?, style: XSSFCellStyle? = null) = createRow(rownum).apply { writeValues(*values, style = style) }!!
 
-    fun visualiseSolution(solved: ProjectAssignment, path: String) {
+    fun visualiseSolution(solved: ProjectAssignment, path: String, open: Boolean = true) {
         val out = File("$path.xlsx")
 
         val book = XSSFWorkbook()
@@ -63,7 +70,9 @@ object Visualiser {
         appSheet.writeHeader("Student", "Project", "Role", "Priority")
         var appRowCount = 1
 
-        solved.students.sortedBy { it.name }.sortedByDescending { it.chosenApplication?.priority ?: 0 }.forEachIndexed { i, student ->
+        solved.students.sortedBy { it.name }.sortedByDescending {
+            it.chosenApplication?.priority ?: 0
+        }.forEachIndexed { i, student ->
             val (apps, fallbacks) = student.applications.partition { it.priority > 0 }
             studentSheet.writeRow(i + 1,
                     student.name,
@@ -92,7 +101,7 @@ object Visualiser {
         Role.values().forEachIndexed { i, role ->
             val col = 3 + i * 5
             supHeader.writeValues("$role", offset = col, style = boldCenter)
-            projectSheet.addMergedRegion(CellRangeAddress(0, 0, col,col + 4))
+            projectSheet.addMergedRegion(CellRangeAddress(0, 0, col, col + 4))
             header.writeValues("min", "max", "chosen", "owners", "apps",
                     offset = col, style = bold)
         }
@@ -136,6 +145,6 @@ object Visualiser {
 
         // Display the result
         out.outputStream().use { book.write(it) }
-        Desktop.getDesktop().browse(out.toURI())
+        if (open) Desktop.getDesktop().browse(out.toURI())
     }
 }
