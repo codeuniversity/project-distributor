@@ -21,3 +21,4 @@ src/main/resources/project-applications.json
 out
 local
 .DS_Store
+*.log
