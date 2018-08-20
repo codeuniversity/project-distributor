@@ -53,22 +53,26 @@ object ExecuteOptimizer {
             val prevChosen = prev.students.map { it.id to it.chosenProject }.toMap()
             unsolved.students.forEach { student ->
                 prevChosen[student.id]?.let { choice ->
-                    if (student.projectMap.containsKey(choice)) {
-                        student.chosenProject = choice
+                    student.chosenProject = choice
+                    if (student.chosenAppPriority <= 0) {
+                        student.chosenProject = null
+                        logger.debug { "$student discarded bad choice $choice" }
+                    } else {
                         logger.debug { "$student -> $choice" }
                     }
                 }
             }
         }
 
-        val fmt = DateTimeFormatter.ofPattern("uuuu-MM-dd_HHmmss")
+        val fmt = DateTimeFormatter.ofPattern("uuuu-MM-dd HH-mm-ss")
         val tstamp = fmt.format(LocalDateTime.now())
-        unsolved.export("$tstamp-unsolved")
+        unsolved.export("$tstamp unsolved")
 
         // Solve the problem
         val solved = solver.solve(unsolved)
 
-        val outputName = "$tstamp-solved-${fmt.format(LocalDateTime.now())}-${solved.score?.hardScore}-${solved.score?.softScore}"
+        val outputName = "$tstamp solved ${fmt.format(LocalDateTime.now())} " +
+                "${solved.score?.hardScore} ${solved.score?.mediumScore} ${solved.score?.softScore}"
         solved.export(outputName)
 
         analyseSolution(solved)
