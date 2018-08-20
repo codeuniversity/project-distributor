@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark>
+	<benchmarkDirectory>local/data</benchmarkDirectory>
+	<parallelBenchmarkCount>AUTO</parallelBenchmarkCount>
+	<warmUpSecondsSpentLimit>10</warmUpSecondsSpentLimit>
+
+	<inheritedSolverBenchmark>
+		<problemBenchmarks>
+			<solutionFileIOClass>org.codeberlin.projectdistributor.AssignmentPersistence</solutionFileIOClass>
+			<inputSolutionFileList>local/data/input/unsolved.json</inputSolutionFileList>
+			<writeOutputSolutionEnabled>true</writeOutputSolutionEnabled>
+		</problemBenchmarks>
+		<solver>
+			<solutionClass>org.codeberlin.projectdistributor.model.ProjectAssignment</solutionClass>
+			<entityClass>org.codeberlin.projectdistributor.model.Student</entityClass>
+			<scoreDirectorFactory>
+				<incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.FastAssignmentScoreCalculator</incrementalScoreCalculatorClass>
+			</scoreDirectorFactory>
+			<termination>
+				<minutesSpentLimit>3</minutesSpentLimit>
+			</termination>
+		</solver>
+	</inheritedSolverBenchmark>
+
+	<solverBenchmark>
+		<name>SimAnn 0-15</name>
+		<solver>
+			<constructionHeuristic>
+				<constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+			</constructionHeuristic>
+			<localSearch>
+				<acceptor>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/15soft</simulatedAnnealingStartingTemperature>
+				</acceptor>
+				<forager>
+					<acceptedCountLimit>4</acceptedCountLimit>
+				</forager>
+			</localSearch>
+		</solver>
+	</solverBenchmark>
+
+	<solverBenchmark>
+		<name>SimAnn 0-15 cheap</name>
+		<solver>
+			<constructionHeuristic>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
+			</constructionHeuristic>
+			<localSearch>
+				<acceptor>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/15soft</simulatedAnnealingStartingTemperature>
+				</acceptor>
+				<forager>
+					<acceptedCountLimit>4</acceptedCountLimit>
+				</forager>
+			</localSearch>
+		</solver>
+	</solverBenchmark>
+
+	<solverBenchmark>
+		<name>SimAnn 0-15 cheap limit-1</name>
+		<solver>
+			<constructionHeuristic>
+				<constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
+			</constructionHeuristic>
+			<localSearch>
+				<acceptor>
+					<simulatedAnnealingStartingTemperature>0hard/0medium/15soft</simulatedAnnealingStartingTemperature>
+				</acceptor>
+				<forager>
+					<acceptedCountLimit>1</acceptedCountLimit>
+				</forager>
+			</localSearch>
+		</solver>
+	</solverBenchmark>
+
+</plannerBenchmark>
