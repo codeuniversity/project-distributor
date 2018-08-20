@@ -14,7 +14,7 @@
         <solutionClass>org.codeberlin.projectdistributor.model.ProjectAssignment</solutionClass>
         <entityClass>org.codeberlin.projectdistributor.model.Student</entityClass>
         <scoreDirectorFactory>
-            <incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.AssignmentScoreCalculator</incrementalScoreCalculatorClass>
+            <incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.FastAssignmentScoreCalculator</incrementalScoreCalculatorClass>
         </scoreDirectorFactory>
       <termination>
         <minutesSpentLimit>1</minutesSpentLimit>
