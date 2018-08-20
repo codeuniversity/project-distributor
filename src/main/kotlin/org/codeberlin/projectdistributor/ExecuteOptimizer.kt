@@ -46,9 +46,20 @@ object ExecuteOptimizer {
                 "solverConfig.xml").buildSolver()
 
         // Load the data, can be from a previous calculation
-        val unsolved =
-                if (args.isEmpty()) ProjectAssignment.convert(Optimizer.loadMainData())
-                else AssignmentPersistence().read(File(args[0]))
+        val unsolved = ProjectAssignment.convert(Optimizer.loadMainData())
+
+        if (args.isNotEmpty()) {
+            val prev = AssignmentPersistence().read(File(args[0]))
+            val prevChosen = prev.students.map { it.id to it.chosenProject }.toMap()
+            unsolved.students.forEach { student ->
+                prevChosen[student.id]?.let { choice ->
+                    if (student.projectMap.containsKey(choice)) {
+                        student.chosenProject = choice
+                        logger.debug { "$student -> $choice" }
+                    }
+                }
+            }
+        }
 
         val fmt = DateTimeFormatter.ofPattern("uuuu-MM-dd_HHmmss")
         val tstamp = fmt.format(LocalDateTime.now())
