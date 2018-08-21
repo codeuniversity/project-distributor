@@ -17,7 +17,7 @@
                 <incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.FastAssignmentScoreCalculator</incrementalScoreCalculatorClass>
             </scoreDirectorFactory>
             <termination>
-                <minutesSpentLimit>3</minutesSpentLimit>
+                <minutesSpentLimit>10</minutesSpentLimit>
             </termination>
             <environmentMode>NON_REPRODUCIBLE</environmentMode>
         </solver>
@@ -25,7 +25,7 @@
 
 <#list [1, 4] as acceptedCountLimit>
     <#list [5, 10, 15, 20, 40, 10000] as temperature>
-        <#list ["CHEAPEST_INSERTION", "FIRST_FIT_DECREASING", "FIRST_FIT"] as heuristic>
+        <#list ["CHEAPEST_INSERTION", "FIRST_FIT_DECREASING"] as heuristic>
   <solverBenchmark>
       <name>temp ${temperature} accepted ${acceptedCountLimit} heuristic ${heuristic}</name>
       <solver>
