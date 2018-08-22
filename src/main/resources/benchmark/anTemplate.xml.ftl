@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plannerBenchmark>
-    <benchmarkDirectory>local/data/template-an</benchmarkDirectory>
-    <parallelBenchmarkCount>AUTO</parallelBenchmarkCount>
+    <benchmarkDirectory>local/data/final</benchmarkDirectory>
+    <parallelBenchmarkCount>4</parallelBenchmarkCount>
 
     <inheritedSolverBenchmark>
         <problemBenchmarks>
             <solutionFileIOClass>org.codeberlin.projectdistributor.AssignmentPersistence</solutionFileIOClass>
-            <inputSolutionFileList>local/data/input/unsolved-t.json</inputSolutionFileList>
+            <#--<inputSolutionFileList>local/data/input/nogc.json</inputSolutionFileList>-->
+            <inputSolutionFileList>local/data/input/withgc.json</inputSolutionFileList>
             <writeOutputSolutionEnabled>true</writeOutputSolutionEnabled>
         </problemBenchmarks>
 
@@ -17,24 +18,25 @@
                 <incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.FastAssignmentScoreCalculator</incrementalScoreCalculatorClass>
             </scoreDirectorFactory>
             <termination>
-                <minutesSpentLimit>10</minutesSpentLimit>
+                <minutesSpentLimit>8</minutesSpentLimit>
             </termination>
             <environmentMode>NON_REPRODUCIBLE</environmentMode>
         </solver>
     </inheritedSolverBenchmark>
 
 <#list [1, 4] as acceptedCountLimit>
-    <#list [5, 10, 15, 20, 40, 10000] as temperature>
-        <#list ["CHEAPEST_INSERTION", "FIRST_FIT_DECREASING"] as heuristic>
+	<#list [0, 5] as medTemp>
+		<#list [15, 20, 40] as softTemp>
+			<#list ["CHEAPEST_INSERTION"] as heuristic>
   <solverBenchmark>
-      <name>temp ${temperature} accepted ${acceptedCountLimit} heuristic ${heuristic}</name>
+      <name>temp ${medTemp}-${softTemp} accepted ${acceptedCountLimit} heuristic ${heuristic}</name>
       <solver>
           <constructionHeuristic>
               <constructionHeuristicType>${heuristic}</constructionHeuristicType>
           </constructionHeuristic>
           <localSearch>
               <acceptor>
-                  <simulatedAnnealingStartingTemperature>0hard/0medium/${temperature}soft</simulatedAnnealingStartingTemperature>
+                  <simulatedAnnealingStartingTemperature>0hard/${medTemp}medium/${softTemp}soft</simulatedAnnealingStartingTemperature>
               </acceptor>
               <forager>
                   <acceptedCountLimit>${acceptedCountLimit}</acceptedCountLimit>
@@ -42,7 +44,8 @@
           </localSearch>
       </solver>
   </solverBenchmark>
-        </#list>
-    </#list>
+			</#list>
+		</#list>
+	</#list>
 </#list>
 </plannerBenchmark>

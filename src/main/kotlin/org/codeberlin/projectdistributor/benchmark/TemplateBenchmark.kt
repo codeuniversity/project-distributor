@@ -28,10 +28,8 @@ object TemplateBenchmark {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val target = File(File("local/data/input").apply { mkdirs() }, "unsolved-t.json")
-        val data = Optimizer.loadMainData()
-        val base = ProjectAssignment.convert(data)
-        AssignmentPersistence().write(base, target)
+        prepareDataset("project-applications", "nogc.json")
+        prepareDataset("project-applications-green", "withgc.json")
 
         // Build the PlannerBenchmark
         val benchmark = args.getOrNull(0) ?: "benchmark/anTemplate.xml.ftl"
@@ -40,6 +38,13 @@ object TemplateBenchmark {
         PlannerBenchmarkFactory.createFromFreemarkerXmlResource(benchmark)
                 .buildPlannerBenchmark()
                 .benchmarkAndShowReportInBrowser()
+    }
+
+    private fun prepareDataset(inName: String, outName: String) {
+        AssignmentPersistence().write(
+                ProjectAssignment.convert(Optimizer.loadMainData(inName)),
+                File(File("local/data/input").apply { mkdirs() }, outName)
+        )
     }
 
 }
