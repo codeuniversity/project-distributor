@@ -30,11 +30,11 @@ object Analyser {
                     "Students winning applications: ${winners.size}\n" +
                     // "\t${winners.print()}\n" +
                     "Students losing applications: ${losers.size}\n" +
-                    "\t${losers.print()}\n\n" +
+                    "\t${losers.sortedBy { it.name }.sortedBy { it.chosenProject?.name }.print()}\n\n" +
                     "Projects with students: ${running.size}\n" +
                     // "${running.joinToString()}\n" +
                     "Projects without students: ${cancelled.size}\n"
-                    // + "${cancelled.joinToString()}\n"
+            // + "${cancelled.joinToString()}\n"
         }
     }
 }

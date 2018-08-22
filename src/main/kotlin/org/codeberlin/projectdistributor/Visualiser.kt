@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import org.apache.poi.ss.usermodel.HorizontalAlignment
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.xssf.usermodel.*
+import org.codeberlin.projectdistributor.Optimizer.loadMainData
 import org.codeberlin.projectdistributor.data.Role
 import org.codeberlin.projectdistributor.model.ProjectAssignment
 import java.awt.Desktop
@@ -19,13 +20,19 @@ object Visualiser {
             if (input.isDirectory) {
                 logger.info { "Analysing directory $path" }
                 for (file in input.listFiles { file -> file.name.endsWith(".json") }) {
-                    visualiseSolution(AssignmentPersistence().read(file), file.path, false)
+                    visualiseSolution(file, false)
                 }
             } else {
                 logger.info { "Analysing $path" }
-                visualiseSolution(AssignmentPersistence().read(input), path, args.size == 1)
+                visualiseSolution(File(path), args.size == 1)
             }
         }
+    }
+
+    fun visualiseSolution(file: File, open: Boolean) {
+        val solved = AssignmentPersistence().read(file)
+        Analyser.analyseSolution(solved)
+        visualiseSolution(solved, file.path, open)
     }
 
     private fun XSSFCell.write(value: Any, style: XSSFCellStyle? = null) {
@@ -96,10 +103,13 @@ object Visualiser {
         // name, for each role: { min, max, number of applications, chosen-non owners, owners }
         val projectSheet = book.createSheet("projects")
 
+        val org = loadMainData().projects.map { it.id to it.stakeholder?.organization }.toMap()
+
         val supHeader = projectSheet.createRow(0)
-        val header = projectSheet.writeRow(1, "Name", "Students", "Score", style = bold)
+        val headePrefixCount = 4
+        val header = projectSheet.writeRow(1, "Name", "Stakeholder", "Students", "Score", style = bold)
         Role.values().forEachIndexed { i, role ->
-            val col = 3 + i * 5
+            val col = headePrefixCount + i * 5
             supHeader.writeValues("$role", offset = col, style = boldCenter)
             projectSheet.addMergedRegion(CellRangeAddress(0, 0, col, col + 4))
             header.writeValues("min", "max", "chosen", "owners", "apps",
@@ -114,13 +124,14 @@ object Visualiser {
             it.chosenApplication
         }.groupBy { it.project }
 
-        solved.projects.forEachIndexed { i, project ->
+        solved.projects.sortedByDescending { chosenByProject[it]?.size ?: 0 > 0 }.forEachIndexed { i, project ->
             val chosen = chosenByProject[project]
             val apps = fullApps[project]?.groupBy { it.role }
             val choices = chosen?.groupBy { it.role }
 
             val row = projectSheet.writeRow(i + 2,
                     project.name,
+                    org[project.id],
                     chosen?.size,
                     chosen?.sumBy { it.priority })
 
@@ -131,7 +142,7 @@ object Visualiser {
                         choices?.get(role)?.count { it.priority < 10 },
                         choices?.get(role)?.count { it.priority == 10 },
                         apps?.get(role)?.size,
-                        offset = 3 + col * 5)
+                        offset = headePrefixCount + col * 5)
             }
         }
 

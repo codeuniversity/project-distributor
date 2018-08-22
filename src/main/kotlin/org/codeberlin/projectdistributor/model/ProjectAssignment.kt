@@ -67,7 +67,9 @@ data class ProjectAssignment(
                 // normal users get a list of their applications plus a list of fallbacks
                 // owners get a single choice: the project they signed up for
                 val applications = if (masterApp == null) {
-                    user.applications.mapNotNull { it.convert(projectById) } + fallBackApplications[user.applications[0].role]!!
+                    val all = user.applications.mapNotNull { it.convert(projectById) } + fallBackApplications[user.applications[0].role]!!
+                    if (user.excluded != null && user.excluded.isNotEmpty()) all.filterNot { user.excluded.contains(it.project.id) }
+                    else all
                 } else listOf(masterApp.convert(projectById)!!)
 
                 Student(user.id, user.name, applications)

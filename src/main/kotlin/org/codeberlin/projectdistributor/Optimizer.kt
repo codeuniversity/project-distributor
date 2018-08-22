@@ -10,11 +10,11 @@ import java.io.File
 object Optimizer {
     private val logger = KotlinLogging.logger {}
 
-    fun loadMainData(): Data {
+    fun loadMainData(fname: String = "project-applications"): Data {
         if (!File("project-distributor-data").isDirectory) {
             logger.warn { "please clone the project-distributor-data repository into this folder" }
         }
-        return DataUtil.fromFile("project-distributor-data/project-applications.json").data
+        return DataUtil.fromFile("project-distributor-data/$fname.json").data
     }
 
     @JvmStatic

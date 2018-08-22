@@ -1,5 +1,5 @@
 package org.codeberlin.projectdistributor.data
 
 data class Stakeholder(
-        val organization: String
+        val organization: String?
 )

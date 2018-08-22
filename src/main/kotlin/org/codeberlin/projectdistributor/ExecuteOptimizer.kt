@@ -46,7 +46,7 @@ object ExecuteOptimizer {
                 "solverConfig.xml").buildSolver()
 
         // Load the data, can be from a previous calculation
-        val unsolved = ProjectAssignment.convert(Optimizer.loadMainData())
+        val unsolved = ProjectAssignment.convert(Optimizer.loadMainData("project-applications-green"))
 
         if (args.isNotEmpty()) {
             val prev = AssignmentPersistence().read(File(args[0]))
