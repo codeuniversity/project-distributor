@@ -17,9 +17,12 @@ object BenchmarkAnalyser {
                     val score = File(sub, "BEST_SCORE.csv")
                     if (score.isFile) {
                         try {
-                            val scoreString = score.readLines().last().split(",").last().replace("\"", "")
-                            Triple(HardMediumSoftScore.parseScore(scoreString), file.name,
-                                    score.parentFile.listFiles().firstOrNull { json -> json.name.endsWith(".json") })
+                            val finalScore = score.readLines().last().split(",")
+                            val scoreString = finalScore.last().replace("\"", "")
+                            listOf(
+                                    HardMediumSoftScore.parseScore(scoreString),
+                                    score.parentFile.listFiles().firstOrNull { json -> json.name.endsWith(".json") },
+                                    finalScore.first().toInt())
                         } catch (e: Exception) {
                             println("${file.name} -> $e")
                             null
@@ -29,17 +32,18 @@ object BenchmarkAnalyser {
             } ?: emptyList()
         }
 
-        val bestScores = scores.sortedByDescending { it.first }
-        println(bestScores.joinToString("\n") { "${it.first}   =>    ${it.second}  => ${it.third}" })
+        val bestScores = scores.sortedByDescending { it[0] as HardMediumSoftScore }
+        println(bestScores.joinToString("\n"))
 
-        val bestFile = bestScores.first().third!!
+        val bestFile = bestScores.first()[1] as File
         val excel = File(bestFile.parentFile, bestFile.name + ".xlsx")
         if (!excel.exists()) {
             println("saving excel at ${excel.absolutePath}")
             Visualiser.visualiseSolution(bestFile, true)
         } else {
             val persistence = AssignmentPersistence()
-            scores.filter { it.first >= bestScores.first().first }.forEach { (_, name, file) ->
+            scores.filter { it[0] as HardMediumSoftScore >= bestScores.first()[0] as HardMediumSoftScore }.forEach { row ->
+                val file = row[1] as File
                 println(file)
                 Analyser.analyseSolution(persistence.read(file))
                 println()
