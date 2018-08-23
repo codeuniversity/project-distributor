@@ -8,7 +8,7 @@ import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty
 import org.optaplanner.core.api.domain.solution.PlanningScore
 import org.optaplanner.core.api.domain.solution.PlanningSolution
 import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProperty
-import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
+import org.optaplanner.core.api.score.buildin.bendable.BendableScore
 
 @PlanningSolution
 data class ProjectAssignment(
@@ -19,13 +19,16 @@ data class ProjectAssignment(
 ) {
     constructor() : this(emptyList(), emptyList())
 
-    @PlanningScore
+    @PlanningScore(bendableHardLevelsSize = 3, bendableSoftLevelsSize = 1)
     @Transient
-    var score: HardMediumSoftScore? = null
+    var score: BendableScore? = null
 
     @ProblemFactCollectionProperty
     @Transient
     val roles = Role.values().toList()
+
+    @Transient
+    val scoreFilename = score?.toString()?.replace("[\\[\\]]".toRegex(), "")?.replace('/', '-')
 
     fun debugContent() {
         logger.debug {

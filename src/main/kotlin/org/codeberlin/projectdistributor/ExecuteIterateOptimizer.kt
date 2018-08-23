@@ -50,12 +50,14 @@ object ExecuteIterateOptimizer {
 
         // Solve the problem
         val solved = solver.solve(unsolved)
-        solved.export("$tstamp solution ${fmt.format(LocalDateTime.now())} ${solved.score?.softScore}")
+        solved.export("$tstamp solution ${fmt.format(LocalDateTime.now())} ${solved.score?.toShortString()}")
 
         var bestScore = solved.score!!
         solved.students.filter { (1..9).contains(it.chosenAppPriority) }.shuffled().take(10).forEach { student ->
-            val scenario = solved.copy(students = solved.students.toMutableList().also {
-                it[it.indexOf(student)] = student.copy(applications = student.applications.filter { it.project != student.chosenProject })
+            val scenario = solved.copy(students = solved.students.toMutableList().also { students ->
+                students[students.indexOf(student)] = student.copy(applications = student.applications.filter { app ->
+                    app.project != student.chosenProject
+                })
             })
             unsolved.export("$tstamp ${student.name}")
             logger.info { "taking away $student ${student.chosenApplication}" }
@@ -65,7 +67,9 @@ object ExecuteIterateOptimizer {
             logger.info { "$student -> ${replacement.score}" }
             if (replacement.score!! > bestScore) {
                 bestScore = replacement.score!!
-                solved.export("$tstamp ${student.name} solution ${fmt.format(LocalDateTime.now())} ${solved.score?.softScore}")
+                solved.export("$tstamp ${student.name} solution ${fmt.format(LocalDateTime.now())} ${
+                solved.score?.toString()?.replace("[\\[\\]]".toRegex(), "")?.replace('/', '-')
+                }")
             }
         }
     }

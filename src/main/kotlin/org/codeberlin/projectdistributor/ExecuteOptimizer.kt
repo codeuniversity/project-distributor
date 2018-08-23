@@ -71,8 +71,7 @@ object ExecuteOptimizer {
         // Solve the problem
         val solved = solver.solve(unsolved)
 
-        val outputName = "$tstamp solved ${fmt.format(LocalDateTime.now())} " +
-                "${solved.score?.hardScore} ${solved.score?.mediumScore} ${solved.score?.softScore}"
+        val outputName = "$tstamp solved ${fmt.format(LocalDateTime.now())} " + solved.scoreFilename
         solved.export(outputName)
 
         analyseSolution(solved)

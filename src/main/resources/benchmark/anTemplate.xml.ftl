@@ -15,28 +15,28 @@
             <solutionClass>org.codeberlin.projectdistributor.model.ProjectAssignment</solutionClass>
             <entityClass>org.codeberlin.projectdistributor.model.Student</entityClass>
             <scoreDirectorFactory>
-                <incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.FastAssignmentScoreCalculator</incrementalScoreCalculatorClass>
+                <incrementalScoreCalculatorClass>org.codeberlin.projectdistributor.score.FastBendableAssignmentScoreCalculator</incrementalScoreCalculatorClass>
             </scoreDirectorFactory>
             <termination>
-                <minutesSpentLimit>8</minutesSpentLimit>
+                <minutesSpentLimit>2</minutesSpentLimit>
             </termination>
             <environmentMode>NON_REPRODUCIBLE</environmentMode>
         </solver>
     </inheritedSolverBenchmark>
 
 <#list [1, 4] as acceptedCountLimit>
-	<#list [0, 5, 8] as medTemp>
+	<#list ["0/0/0", "0/5/1"] as hardTemp>
 		<#list [10, 15, 20, 40] as softTemp>
 			<#list ["CHEAPEST_INSERTION"] as heuristic>
   <solverBenchmark>
-      <name>temp ${medTemp}-${softTemp} accepted ${acceptedCountLimit} heuristic ${heuristic}</name>
+      <name>temp ${hardTemp ? replace("/", "-")}-${softTemp} accepted ${acceptedCountLimit} heuristic ${heuristic}</name>
       <solver>
           <constructionHeuristic>
               <constructionHeuristicType>${heuristic}</constructionHeuristicType>
           </constructionHeuristic>
           <localSearch>
               <acceptor>
-                  <simulatedAnnealingStartingTemperature>0hard/${medTemp}medium/${softTemp}soft</simulatedAnnealingStartingTemperature>
+                  <simulatedAnnealingStartingTemperature>[${hardTemp}]hard/[${softTemp}]soft</simulatedAnnealingStartingTemperature>
               </acceptor>
               <forager>
                   <acceptedCountLimit>${acceptedCountLimit}</acceptedCountLimit>

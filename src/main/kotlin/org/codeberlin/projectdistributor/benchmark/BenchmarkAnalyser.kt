@@ -3,7 +3,7 @@ package org.codeberlin.projectdistributor.benchmark
 import org.codeberlin.projectdistributor.Analyser
 import org.codeberlin.projectdistributor.AssignmentPersistence
 import org.codeberlin.projectdistributor.Visualiser
-import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
+import org.optaplanner.core.api.score.buildin.bendable.BendableScore
 import java.io.File
 
 object BenchmarkAnalyser {
@@ -17,9 +17,11 @@ object BenchmarkAnalyser {
                     val score = File(sub, "BEST_SCORE.csv")
                     if (score.isFile) {
                         try {
-                            val scoreString = score.readLines().last().split(",").last().replace("\"", "")
-                            Triple(HardMediumSoftScore.parseScore(scoreString), file.name,
-                                    score.parentFile.listFiles().firstOrNull { json -> json.name.endsWith(".json") })
+                            val split = score.readLines().last().split(",")
+                            val scoreString = split.last().replace("\"", "")
+                            Triple(BendableScore.parseScore(scoreString),
+                                    score.parentFile.listFiles().firstOrNull { json -> json.name.endsWith(".json") },
+                                    split.first().toInt())
                         } catch (e: Exception) {
                             println("${file.name} -> $e")
                             null
@@ -30,16 +32,16 @@ object BenchmarkAnalyser {
         }
 
         val bestScores = scores.sortedByDescending { it.first }
-        println(bestScores.joinToString("\n") { "${it.first}   =>    ${it.second}  => ${it.third}" })
+        println(bestScores.joinToString("\n"))
 
-        val bestFile = bestScores.first().third!!
+        val bestFile = bestScores.first().second!!
         val excel = File(bestFile.parentFile, bestFile.name + ".xlsx")
         if (!excel.exists()) {
             println("saving excel at ${excel.absolutePath}")
             Visualiser.visualiseSolution(bestFile, true)
         } else {
             val persistence = AssignmentPersistence()
-            scores.filter { it.first >= bestScores.first().first }.forEach { (_, name, file) ->
+            scores.filter { it.first >= bestScores.first().first }.forEach { (_, file, _) ->
                 println(file)
                 Analyser.analyseSolution(persistence.read(file))
                 println()
