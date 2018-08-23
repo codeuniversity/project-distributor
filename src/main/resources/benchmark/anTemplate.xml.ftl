@@ -25,8 +25,8 @@
     </inheritedSolverBenchmark>
 
 <#list [1, 4] as acceptedCountLimit>
-	<#list [0, 5] as medTemp>
-		<#list [15, 20, 40] as softTemp>
+	<#list [0, 5, 8] as medTemp>
+		<#list [10, 15, 20, 40] as softTemp>
 			<#list ["CHEAPEST_INSERTION"] as heuristic>
   <solverBenchmark>
       <name>temp ${medTemp}-${softTemp} accepted ${acceptedCountLimit} heuristic ${heuristic}</name>
